@@ -75,6 +75,8 @@ void LogIn::on_loginButton_clicked()
                 //登陆成功后显示对话框
                 close();
                 MyClient client;
+                client.customerId = CustomerIdLogin;
+                client.initMyClient();
                 client.exec();
 
             }

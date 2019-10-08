@@ -27,12 +27,13 @@ void MyRegister::on_register_2_clicked()
 
     if (registerCheck(customerIdRegister) == true)//检查发现该手机号未被注册
     {
-        query.prepare("insert into CUSTOMERS(customer_id,customer_name,psw) "
-                      "values(?,?,?)");
+        query.prepare("insert into CUSTOMERS(customer_id,customer_name,psw,money) "
+                      "values(?,?,?,?)");
 
         query.addBindValue(ui->id->text());
         query.addBindValue(ui->name->text());
         query.addBindValue(ui->psw->text());
+        query.addBindValue(0);
         query.exec();
         cout << "注册成功";
 

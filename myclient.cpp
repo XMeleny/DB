@@ -8,8 +8,8 @@ MyClient::MyClient(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    cout<<"hhh";
-    initMyClient();
+    //cout<<customerId;
+    //initMyClient();
 }
 
 MyClient::~MyClient()
@@ -49,6 +49,16 @@ void MyClient::initMyClient()
     goods_model->setTable("GOODS");
     goods_model->select();
     ui->tableView->setModel(goods_model);
+
+    //显示顾客当前余额
+    query.prepare("select money from CUSTOMERS where customer_id = ?");
+    query.addBindValue(customerId);
+    query.exec();
+    query.next();
+    //float remaining = query.value(0).toFloat();
+    QString remaining = QString("%1").arg(query.value(0).toFloat());
+    ui->remaining->setText(remaining);
+    //cout<<remaining;
 
 }
 
@@ -95,7 +105,34 @@ void MyClient::on_check_clicked()
 //充值
 void MyClient::on_charge_clicked()
 {
+    float rechargeMoney = ui->ChargeMoney->text().toFloat();
 
+    QSqlQuery query;
+    query.prepare("select * from CUSTOMERS where customer_id = ?");
+    query.addBindValue(customerId);
+    query.exec();
+
+    if (query.next())
+    {
+        float currentMoney = query.value(4).toFloat();
+        query.prepare("update CUSTOMERS set money = ? where customer_id = ?");
+        query.addBindValue(rechargeMoney+currentMoney);
+        query.addBindValue(customerId);
+        query.exec();
+        //TODO:弹窗显示充值成功？
+        cout<<"充值成功!";
+
+        //充值完 更新当前余额
+        query.prepare("select money from CUSTOMERS where customer_id = ?");
+        query.addBindValue(customerId);
+        query.exec();
+        query.next();
+        //float remaining = query.value(0).toFloat();
+        QString remaining = QString("%1").arg(query.value(0).toFloat());
+        ui->remaining->setText(remaining);
+    }
+    else//一般不会出现的情况
+        cout<<"出错";
 }
 
 

@@ -16,6 +16,7 @@ public:
     ~MyClient();
     //界面初始化
     void initMyClient();
+    QString customerId;
     //商品信息数据网格与表单联动
 //    void onTableSelectChange(int row);
 
