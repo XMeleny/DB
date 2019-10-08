@@ -39,7 +39,7 @@ private slots:
 
 private:
     Ui::MyStaff *ui;
-    QSqlTableModel *model;
+    QSqlTableModel *goods_model;
 };
 
 #endif // MYSTAFF_H

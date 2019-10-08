@@ -10,6 +10,7 @@ MyStaff::MyStaff(QWidget *parent) :
     ui(new Ui::MyStaff)
 {
     ui->setupUi(this);
+    goods_model=new QSqlTableModel;
     initMyStaff();   //初始化
 }
 
@@ -48,7 +49,6 @@ void MyStaff::initMyStaff()
 
 
         //将商品详情显示到tableView
-        QSqlTableModel *goods_model=new QSqlTableModel(this);
         goods_model->setTable("GOODS");
         goods_model->select();
         ui->tableView->setModel(goods_model);
@@ -56,12 +56,12 @@ void MyStaff::initMyStaff()
 
 
 
-        model=new QSqlTableModel;
-        model->setTable("GOODS");
-        model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-        model->select(); //选取整个表的所有行
+        goods_model=new QSqlTableModel;
+        goods_model->setTable("GOODS");
+        goods_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        goods_model->select(); //选取整个表的所有行
 
-        ui->tableView_2->setModel(model);
+        ui->tableView_2->setModel(goods_model);
         ui->tableView_2->hideColumn(0);//hide the id,in case the changes
         ui->tableView_2->hideColumn(2);//hide the amount
         ui->tableView_2->hideColumn(3);//hide the cost
@@ -81,7 +81,7 @@ void MyStaff::onTableSelectChange(int row)
     if(row!=0)
         r=ui->tableView->currentIndex().row();
     QModelIndex index;
-    QSqlTableModel *goods_model=new QSqlTableModel(this);
+//    QSqlTableModel *goods_model=new QSqlTableModel(this);
     goods_model->setTable("GOODS");
     goods_model->select();
     index=goods_model->index(r,1);//名称
@@ -138,7 +138,7 @@ void MyStaff::on_putIn_clicked()
             qDebug() << model.lastError();
 
         //刷新tableview信息
-        QSqlTableModel *goods_model=new QSqlTableModel(this);
+//        QSqlTableModel *goods_model=new QSqlTableModel(this);
         goods_model->setTable("GOODS");
         goods_model->select();
         ui->tableView->setModel(goods_model);
@@ -160,7 +160,8 @@ void MyStaff::on_putOut_clicked()
         ui->spinBox->setValue(0);
         ui->id->setText("");
 
-        QSqlTableModel *goods_model=new QSqlTableModel(this);
+//        QSqlTableModel *goods_model=new QSqlTableModel;
+        goods_model=new QSqlTableModel(this);
         goods_model->setTable("GOODS");
         goods_model->select();
         ui->tableView->setModel(goods_model);
@@ -170,13 +171,20 @@ void MyStaff::on_putOut_clicked()
 
 void MyStaff::on_pushButton_2_clicked()
 {
-    model->database().transaction(); //开始事务操作
-    if (model->submitAll())
+    goods_model->database().transaction(); //开始事务操作
+    if (goods_model->submitAll())
     {
-        model->database().commit(); //提交
+        goods_model->database().commit(); //提交
+
+//        QSqlTableModel *goods_model=new QSqlTableModel;
+        goods_model->setTable("GOODS");
+        goods_model->select();
+        ui->tableView->setModel(goods_model);
+
+
     } else
     {
-        model->database().rollback(); //回滚
-        QMessageBox::warning(this, tr("tableModel"), tr("数据库错误: %1").arg(model->lastError().text()));
+        goods_model->database().rollback(); //回滚
+        QMessageBox::warning(this, tr("tableModel"), tr("数据库错误: %1").arg(goods_model->lastError().text()));
     }
 }
