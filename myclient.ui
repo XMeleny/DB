@@ -16,8 +16,8 @@
   <widget class="QToolBox" name="toolBox">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>20</y>
+     <x>0</x>
+     <y>10</y>
      <width>751</width>
      <height>431</height>
     </rect>
@@ -95,12 +95,12 @@
       <string>商品：</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
        <y>20</y>
-       <width>95</width>
+       <width>141</width>
        <height>24</height>
       </rect>
      </property>
@@ -117,12 +117,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
        <y>60</y>
-       <width>95</width>
+       <width>141</width>
        <height>24</height>
       </rect>
      </property>
@@ -139,13 +139,13 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
        <y>110</y>
-       <width>40</width>
-       <height>14</height>
+       <width>81</width>
+       <height>16</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -168,12 +168,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>160</x>
        <y>110</y>
-       <width>33</width>
+       <width>61</width>
        <height>16</height>
       </rect>
      </property>
@@ -200,12 +200,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
        <y>140</y>
-       <width>73</width>
+       <width>81</width>
        <height>23</height>
       </rect>
      </property>
@@ -222,12 +222,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>160</x>
        <y>140</y>
-       <width>42</width>
+       <width>71</width>
        <height>16</height>
       </rect>
      </property>
@@ -254,7 +254,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>210</x>
@@ -371,20 +371,7 @@
       <string>账号：</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_17">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>170</y>
-       <width>54</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>密码：</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="ChargeMoney">
      <property name="geometry">
       <rect>
        <x>190</x>
@@ -399,16 +386,6 @@
       <rect>
        <x>190</x>
        <y>100</y>
-       <width>113</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_4">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>170</y>
        <width>113</width>
        <height>20</height>
       </rect>
@@ -437,20 +414,20 @@
       </rect>
      </property>
      <property name="text">
-      <string>金额</string>
+      <string>当前余额</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLabel" name="remaining">
      <property name="geometry">
       <rect>
-       <x>520</x>
+       <x>540</x>
        <y>30</y>
-       <width>131</width>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>1000</string>
+      <string/>
      </property>
     </widget>
    </widget>

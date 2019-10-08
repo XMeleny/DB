@@ -2,16 +2,14 @@
 #include "ui_myclient.h"
 #include"login.h"
 #include"connection.h"
-
-
 MyClient::MyClient(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MyClient)
 {
 
     ui->setupUi(this);
-     qDebug()<<"hhh";
-    void initMyClient();
+    //cout<<customerId;
+    //initMyClient();
 }
 
 MyClient::~MyClient()
@@ -21,50 +19,48 @@ MyClient::~MyClient()
 
 void MyClient::on_loginAgain_clicked()
 {
+    //重新登录
     close();
-LogIn login;
-login.exec();
+    LogIn login;
+    login.exec();
 }
 
 //界面初始化
 void MyClient::initMyClient()
 {
-    qDebug()<<"hhh";
-    if(createConnection())
+    QStringList strings;
+    ui->toolBox->setCurrentIndex(0);
+    QSqlQuery query;
+
+    //将商品类型显示到comboBox，测试通过
+    query.exec("select kind from GOODS;");
+    while(query.next())
     {
-        qDebug()<<"hhh";
-        QStringList strings;
-        ui->toolBox->setCurrentIndex(0);
-        QSqlQuery query;
-
-
-        //将商品类型显示到comboBox
-        query.exec("select kind from GOODS;");
-        while(query.next())
-        {
-            strings.append(query.value(0).toString());
-        }
-        QCompleter* com=new QCompleter(strings,this);
-        ui->comboBox->clear();
-        ui->comboBox->addItems(strings);
-        ui->comboBox->setCompleter(com);
-//        QSqlQueryModel *goodsKind=new QSqlQueryModel(this);
-//        goodsKind->setQuery("selec kind from GOODS;");
-//        this->ui->comboBox->setModel(goodsKind);
-
-
-        //将商品详情显示到tableView
-        QSqlTableModel *goods_model=new QSqlTableModel(this);
-        goods_model->setTable("GOODS");
-        goods_model->select();
-        ui->tableView->setModel(goods_model);
+        strings.append(query.value(0).toString());
+        //cout<<query.value(0);
     }
+    QCompleter* com=new QCompleter(strings,this);
+    ui->comboBox->clear();
+    ui->comboBox->addItems(strings);
+    ui->comboBox->setCompleter(com);
+
+    //将商品详情显示到tableView，测试通过
+    QSqlTableModel *goods_model=new QSqlTableModel(this);
+    goods_model->setTable("GOODS");
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
+
+    //显示顾客当前余额
+    query.prepare("select money from CUSTOMERS where customer_id = ?");
+    query.addBindValue(customerId);
+    query.exec();
+    query.next();
+    //float remaining = query.value(0).toFloat();
+    QString remaining = QString("%1").arg(query.value(0).toFloat());
+    ui->remaining->setText(remaining);
+    //cout<<remaining;
+
 }
-
-
-
-
-
 
 //点击右侧商品，左边修改
 //void MyClient::on_tableView_clicked(const QModelIndex &index)
@@ -109,7 +105,34 @@ void MyClient::on_check_clicked()
 //充值
 void MyClient::on_charge_clicked()
 {
+    float rechargeMoney = ui->ChargeMoney->text().toFloat();
 
+    QSqlQuery query;
+    query.prepare("select * from CUSTOMERS where customer_id = ?");
+    query.addBindValue(customerId);
+    query.exec();
+
+    if (query.next())
+    {
+        float currentMoney = query.value(4).toFloat();
+        query.prepare("update CUSTOMERS set money = ? where customer_id = ?");
+        query.addBindValue(rechargeMoney+currentMoney);
+        query.addBindValue(customerId);
+        query.exec();
+        //TODO:弹窗显示充值成功？
+        cout<<"充值成功!";
+
+        //充值完 更新当前余额
+        query.prepare("select money from CUSTOMERS where customer_id = ?");
+        query.addBindValue(customerId);
+        query.exec();
+        query.next();
+        //float remaining = query.value(0).toFloat();
+        QString remaining = QString("%1").arg(query.value(0).toFloat());
+        ui->remaining->setText(remaining);
+    }
+    else//一般不会出现的情况
+        cout<<"出错";
 }
 
 

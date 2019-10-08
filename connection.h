@@ -1,7 +1,6 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 #include<includes.h>
-
 static bool createConnection()
 {
 QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -12,12 +11,12 @@ QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     //打开数据库
     if(!db.open())
     {
-        qDebug()<<"linking database error!!!";
+        cout<<"linking database error!!!";
         return false;
     }
     else
     {
-        qDebug()<<"linking database success!!!";
+        cout<<"linking database success!!!";
         return true;
     }
 
