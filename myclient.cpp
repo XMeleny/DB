@@ -2,16 +2,14 @@
 #include "ui_myclient.h"
 #include"login.h"
 #include"connection.h"
-
-
 MyClient::MyClient(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MyClient)
 {
 
     ui->setupUi(this);
-     qDebug()<<"hhh";
-    void initMyClient();
+    cout<<"hhh";
+    initMyClient();
 }
 
 MyClient::~MyClient()
@@ -30,42 +28,29 @@ void MyClient::on_loginAgain_clicked()
 //界面初始化
 void MyClient::initMyClient()
 {
-    cout<<"hhh";
-    //if(createConnection())
-    //{
-        cout<<"hhh";
-        QStringList strings;
-        ui->toolBox->setCurrentIndex(0);
-        QSqlQuery query;
+    QStringList strings;
+    ui->toolBox->setCurrentIndex(0);
+    QSqlQuery query;
 
+    //将商品类型显示到comboBox，测试通过
+    query.exec("select kind from GOODS;");
+    while(query.next())
+    {
+        strings.append(query.value(0).toString());
+        //cout<<query.value(0);
+    }
+    QCompleter* com=new QCompleter(strings,this);
+    ui->comboBox->clear();
+    ui->comboBox->addItems(strings);
+    ui->comboBox->setCompleter(com);
 
-        //将商品类型显示到comboBox
-        query.exec("select kind from GOODS;");
-        while(query.next())
-        {
-            strings.append(query.value(0).toString());
-        }
-        QCompleter* com=new QCompleter(strings,this);
-        ui->comboBox->clear();
-        ui->comboBox->addItems(strings);
-        ui->comboBox->setCompleter(com);
-//        QSqlQueryModel *goodsKind=new QSqlQueryModel(this);
-//        goodsKind->setQuery("selec kind from GOODS;");
-//        this->ui->comboBox->setModel(goodsKind);
+    //将商品详情显示到tableView，测试通过
+    QSqlTableModel *goods_model=new QSqlTableModel(this);
+    goods_model->setTable("GOODS");
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
 
-
-        //将商品详情显示到tableView
-        QSqlTableModel *goods_model=new QSqlTableModel(this);
-        goods_model->setTable("GOODS");
-        goods_model->select();
-        ui->tableView->setModel(goods_model);
-   // }
 }
-
-
-
-
-
 
 //点击右侧商品，左边修改
 //void MyClient::on_tableView_clicked(const QModelIndex &index)

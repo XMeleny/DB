@@ -23,7 +23,7 @@ LogIn::~LogIn()
 void LogIn::on_loginButton_clicked()
 {
     //登入
-    MyClient client;
+
     MyBoss boss;
     LogIn login;
     MyStaff staff;
@@ -74,6 +74,7 @@ void LogIn::on_loginButton_clicked()
                 cout<<"登录成功";
                 //登陆成功后显示对话框
                 close();
+                MyClient client;
                 client.exec();
 
             }

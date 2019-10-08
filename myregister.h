@@ -21,6 +21,8 @@ private slots:
 
     void on_register_2_clicked();
 
+    bool registerCheck(QString);
+
 private:
     Ui::MyRegister *ui;
 };
