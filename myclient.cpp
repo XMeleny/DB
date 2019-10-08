@@ -21,18 +21,19 @@ MyClient::~MyClient()
 
 void MyClient::on_loginAgain_clicked()
 {
+    //重新登录
     close();
-LogIn login;
-login.exec();
+    LogIn login;
+    login.exec();
 }
 
 //界面初始化
 void MyClient::initMyClient()
 {
-    qDebug()<<"hhh";
-    if(createConnection())
-    {
-        qDebug()<<"hhh";
+    cout<<"hhh";
+    //if(createConnection())
+    //{
+        cout<<"hhh";
         QStringList strings;
         ui->toolBox->setCurrentIndex(0);
         QSqlQuery query;
@@ -58,7 +59,7 @@ void MyClient::initMyClient()
         goods_model->setTable("GOODS");
         goods_model->select();
         ui->tableView->setModel(goods_model);
-    }
+   // }
 }
 
 

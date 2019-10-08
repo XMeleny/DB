@@ -28,8 +28,8 @@ void MyStaff::on_loginAgain_clicked()
 
 void MyStaff::initMyStaff()
 {
-    if(createConnection())
-    {
+    //if(createConnection())
+    //{
         QStringList strings;
         ui->toolBox->setCurrentIndex(0);
         QSqlQuery query;
@@ -65,7 +65,7 @@ void MyStaff::initMyStaff()
         ui->tableView_2->hideColumn(0);//hide the id,in case the changes
         ui->tableView_2->hideColumn(2);//hide the amount
         ui->tableView_2->hideColumn(3);//hide the cost
-    }
+   // }
 
 }
 

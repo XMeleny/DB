@@ -26,8 +26,8 @@ login.exec();
 
 void MyBoss::on_pushButton_clicked()
 {
-    if(createConnection())
-    {
+    //if(createConnection())
+    //{
 
         QSqlQuery query;
         query.exec("select *from GOODS;");
@@ -35,7 +35,7 @@ void MyBoss::on_pushButton_clicked()
         {
             qDebug()<<query.value(0).toInt()<<query.value(1).toString();
         }
-    }
+    //}
 }
 //周结账单
 void MyBoss::on_weeklyBill_clicked()

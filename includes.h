@@ -35,7 +35,7 @@
 
 
 #include<QSqlQueryModel>
-
+#define cout qDebug() << "[" <<__FILE__<<":"<<__LINE__<<"]"
 
 
 #endif // INCLUDES_H
