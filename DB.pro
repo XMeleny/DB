@@ -21,8 +21,7 @@ SOURCES += \
     myboss.cpp \
     myclient.cpp \
     mystaff.cpp \
-    myregister.cpp \
-    shoppingchartrecord.cpp
+    myregister.cpp
 
 HEADERS += \
     login.h \
@@ -31,16 +30,14 @@ HEADERS += \
     mystaff.h \
     connection.h \
     myregister.h \
-    includes.h \
-    shoppingchartrecord.h
+    includes.h
 
 FORMS += \
     login.ui \
     myboss.ui \
     myclient.ui \
     mystaff.ui \
-    myregister.ui \
-    shoppingchartrecord.ui
+    myregister.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
