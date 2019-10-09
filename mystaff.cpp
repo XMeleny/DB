@@ -2,7 +2,6 @@
 #include "ui_mystaff.h"
 #include "login.h"
 #include "connection.h"
-#include "mysqlquerymodel.h"
 
 
 MyStaff::MyStaff(QWidget *parent) :

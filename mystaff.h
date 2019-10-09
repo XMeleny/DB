@@ -2,7 +2,6 @@
 #define MYSTAFF_H
 
 #include<includes.h>
-#include<mysqlquerymodel.h>
 
 namespace Ui {
 class MyStaff;
