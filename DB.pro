@@ -21,8 +21,7 @@ SOURCES += \
     myboss.cpp \
     myclient.cpp \
     mystaff.cpp \
-    myregister.cpp \
-    mysqlquerymodel.cpp
+    myregister.cpp
 
 HEADERS += \
     login.h \
@@ -31,8 +30,7 @@ HEADERS += \
     mystaff.h \
     connection.h \
     myregister.h \
-    includes.h \
-    mysqlquerymodel.h
+    includes.h
 
 FORMS += \
     login.ui \
