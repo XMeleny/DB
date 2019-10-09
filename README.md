@@ -2,6 +2,11 @@
 
 为了只用一个远程仓库，使用方法如下：
 
+首先选择你最喜欢的路径
+
+//这一句我不知道有没有用，如果大家看到git remote -v不是连接XMeleny的话就用这一句话
+git remote add origin https://github.com/XMeleny/DB
+
 git clone https://github.com/XMeleny/DB
 
 //do you job
