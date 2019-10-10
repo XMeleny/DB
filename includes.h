@@ -41,5 +41,8 @@
 #include<QSqlQueryModel>
 #define cout qDebug() << "[" <<__FILE__<<":"<<__LINE__<<"]"
 
+#include<QHBoxLayout>
+#include<QVBoxLayout>
+
 
 #endif // INCLUDES_H

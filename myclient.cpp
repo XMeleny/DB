@@ -6,7 +6,7 @@ MyClient::MyClient(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MyClient)
 {
-
+    //todo: 获得登录的客户id，才能生成购物车界面
     ui->setupUi(this);
     //cout<<customerId;
     //initMyClient();
@@ -61,14 +61,38 @@ void MyClient::initMyClient()
     //cout<<remaining;
 
 
-    //初始化购物车
-    query.prepare("select * from shoppingChart where id=:id");
-//    query.bindValue(":id",id);
-//    query.exec();
+    //todo:初始化购物车,didn't test yet
+    query.prepare("select * from shopping_charts where customer_id=:customer_id");
+    query.bindValue(":customer_id",customerId);
+    query.exec();
+
+    //todo:change the id into name
+    QHBoxLayout *hLayout=new QHBoxLayout;
+    QLabel *buy=new QLabel("buy");
+    QLabel *goodsName=new QLabel("goods_id");
+    QLabel *amount= new QLabel("amount");
+    QLabel *sumMoney=new QLabel("sumMoney");
+    hLayout->addWidget(buy);
+    hLayout->addWidget(goodsName);
+    hLayout->addWidget(amount);
+    hLayout->addWidget(sumMoney);
+    ui->verticalLayout_shoppingChart->addLayout(hLayout);
 
     while(query.next())
     {
+        cout<<"record in shopping chart"<<endl;
+        QHBoxLayout *hLayout=new QHBoxLayout;
+        QCheckBox *buy=new QCheckBox("");
+        QLabel *goodsName=new QLabel(query.value("goods_id").toString());
+        QLabel *amount= new QLabel(query.value("amount").toString());
+        QLabel *sumMoney=new QLabel(query.value("money").toString());
 
+        hLayout->addWidget(buy);
+        hLayout->addWidget(goodsName);
+        hLayout->addWidget(amount);
+        hLayout->addWidget(sumMoney);
+
+        ui->verticalLayout_shoppingChart->addLayout(hLayout);
     }
 
 }
