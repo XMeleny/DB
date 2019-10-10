@@ -332,6 +332,17 @@
       <string>下单</string>
      </property>
     </widget>
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>351</width>
+       <height>191</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_shoppingChart"/>
+    </widget>
    </widget>
    <widget class="QWidget" name="page">
     <property name="geometry">

@@ -60,6 +60,17 @@ void MyClient::initMyClient()
     ui->remaining->setText(remaining);
     //cout<<remaining;
 
+
+    //初始化购物车
+    query.prepare("select * from shoppingChart where id=:id");
+//    query.bindValue(":id",id);
+//    query.exec();
+
+    while(query.next())
+    {
+
+    }
+
 }
 
 //点击右侧商品，左边修改

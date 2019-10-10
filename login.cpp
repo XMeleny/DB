@@ -27,32 +27,37 @@ void LogIn::on_loginButton_clicked()
     MyBoss boss;
     LogIn login;
     MyStaff staff;
+
     //先检查是否是老板
     if(this->ui->name->text().trimmed() == tr("boss") &&
-                this->ui->passward->text().trimmed()== tr("123"))  //去除lineEdit内的用户名和密码进行校验
-        {
-            //登陆成功后显示对话框
-            close();
-            boss.exec();
+            this->ui->passward->text().trimmed()== tr("123"))  //去除lineEdit内的用户名和密码进行校验
+    {
+        //登陆成功后显示对话框
+        close();
+        boss.exec();
 
-        }
+    }
     //然后检查是否是员工
     else if(this->ui->name->text().trimmed() == tr("") &&
-                this->ui->passward->text().trimmed()== tr(""))  //去除lineEdit内的用户名和密码进行校验
-        {
-            //登陆成功后显示对话框
-            close();
-            staff.exec();
-        }
+            this->ui->passward->text().trimmed()== tr(""))  //去除lineEdit内的用户名和密码进行校验
+    {
+        //登陆成功后显示对话框
+        close();
+        staff.exec();
+    }
     //然后检查是否是顾客、或者账号不存在
     else
-        {
+    {
 
         QSqlQuery query;
 
         //检查账号是否存在
         QString CustomerIdLogin = ui->name->text();
-        query.exec(QString("select *from CUSTOMERS where customer_id = %1").arg(CustomerIdLogin));
+        query.prepare("select *from CUSTOMERS where customer_id = :id");
+        query.bindValue(":id",CustomerIdLogin);
+        query.exec();
+
+//        query.exec(QString("select *from CUSTOMERS where customer_id = %1").arg(CustomerIdLogin));
 
         if (query.next() == false)
         {
@@ -90,15 +95,15 @@ void LogIn::on_loginButton_clicked()
                 ui->name->setFocus();  //将鼠标重新定位到nameLine
             }
         }
-        }
+    }
 
-//    if(this->ui->name->text().trimmed() == tr("client") &&
-//            this->ui->passward->text().trimmed()== tr("123"))  //去除lineEdit内的用户名和密码进行校验
-//    {
-//        //登陆成功后显示对话框
-//        close();
-//        client.exec();
-//    }
+    //    if(this->ui->name->text().trimmed() == tr("client") &&
+    //            this->ui->passward->text().trimmed()== tr("123"))  //去除lineEdit内的用户名和密码进行校验
+    //    {
+    //        //登陆成功后显示对话框
+    //        close();
+    //        client.exec();
+    //    }
 
 }
 
