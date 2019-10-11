@@ -31,7 +31,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>368</height>
+      <height>353</height>
      </rect>
     </property>
     <attribute name="label">
@@ -135,7 +135,17 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="name"/>
+       <widget class="QLabel" name="name">
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -145,7 +155,7 @@
        <x>30</x>
        <y>110</y>
        <width>81</width>
-       <height>16</height>
+       <height>20</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -161,6 +171,9 @@
         <property name="frameShape">
          <enum>QFrame::Box</enum>
         </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -174,7 +187,7 @@
        <x>160</x>
        <y>110</y>
        <width>61</width>
-       <height>16</height>
+       <height>20</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -205,7 +218,7 @@
       <rect>
        <x>30</x>
        <y>140</y>
-       <width>81</width>
+       <width>84</width>
        <height>23</height>
       </rect>
      </property>
@@ -228,7 +241,7 @@
        <x>160</x>
        <y>140</y>
        <width>71</width>
-       <height>16</height>
+       <height>20</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -260,7 +273,7 @@
        <x>210</x>
        <y>230</y>
        <width>75</width>
-       <height>42</height>
+       <height>48</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -306,6 +319,19 @@
       </item>
      </layout>
     </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>290</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>显示所有商品</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="toolBoxPage2">
     <property name="geometry">
@@ -313,7 +339,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>368</height>
+      <height>353</height>
      </rect>
     </property>
     <attribute name="label">
@@ -339,7 +365,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>368</height>
+      <height>353</height>
      </rect>
     </property>
     <attribute name="label">

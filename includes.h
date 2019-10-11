@@ -32,7 +32,8 @@
 
 #include <QSqlQuery>
 #include <QColor>
-
+#include<QSqlRecord>
+#include<QTime>
 
 #include<QSqlQueryModel>
 #define cout qDebug() << "[" <<__FILE__<<":"<<__LINE__<<"]"

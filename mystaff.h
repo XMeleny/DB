@@ -36,6 +36,10 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_comboBox_currentTextChanged(const QString &arg1);
+
+    void on_pushButton_3_clicked();
+
 private:
     Ui::MyStaff *ui;
     QSqlTableModel *goods_model;
