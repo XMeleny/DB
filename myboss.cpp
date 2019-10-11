@@ -41,43 +41,27 @@ void MyBoss::on_yearBill_clicked()
 {
 
 }
-//todo:添加优惠不成功
+
 void MyBoss::on_addDiscount_clicked()
 {
 
-    if(createConnection())
-    {
-        QDateTime stime,etime;
         QSqlQuery query;
-        QString name1=ui->name->text();
-        QString kind1=ui->kind->currentText();
-        QString start=ui->start->text();
-        QString end=ui->end->text();
-        stime=QDateTime::fromString(start, "yyyy-MM-dd hh:mm:ss");
-        etime=QDateTime::fromString(end, "yyyy-MM-dd hh:mm:ss");
-        int id1=ui->id->text().toInt();
-        QSqlQueryModel model;
-
-        query.prepare("insert into discounts(discount_id,dicount_name,kind,start_time,end_time) values(:id,:name,:kind,:start,:end)");
-        query.bindValue(":id",id1);
-        query.bindValue(":name",name1);
-        query.bindValue(":kind",kind1);
-        query.bindValue(":start",stime);
-        query.bindValue(":end",etime);
-
+        query.prepare("insert into discounts(discount_id,discount_name,kind,start_time,end_time) "
+                      "values(?,?,?,?,?)");
+        query.addBindValue(ui->id->text());
+        query.addBindValue(ui->name->text());
+        query.addBindValue(ui->kind->currentText());
+        query.addBindValue(ui->start->text());
+        query.addBindValue(ui->end->text());
         query.exec();
-
-
-        if (model.lastError().isValid())
-            qDebug() << model.lastError();
 
         //刷新tableview信息
         discount_model->setTable("discounts");
         discount_model->select();
         ui->tableView->setModel(discount_model);
-
-    }
 }
+
+
 //删除优惠
 void MyBoss::on_deleteDiscount_clicked()
 {
@@ -137,7 +121,7 @@ void MyBoss::on_tableView_clicked(const QModelIndex &index)
     onTableSelectChange(1);
 }
 
-//todo:时间显示有点问题
+
 void MyBoss::onTableSelectChange(int row)
 {
     int r=1;
@@ -161,6 +145,10 @@ void MyBoss::onTableSelectChange(int row)
     query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
     query.next();
     ui->kind->setCurrentText(query.value(0).toString());
+
+    discount_model->setTable("discounts");
+    discount_model->select();
+    ui->tableView->setModel(discount_model);
 
 }
 

@@ -70,6 +70,7 @@ void MyStaff::initMyStaff()
 
 
 //点击右侧商品，左边修改
+//todo:第二次点击 qdebug输出结果为000
 void MyStaff::on_tableView_clicked(const QModelIndex &index)
 {
     cout<<"in on_tableView_click function"<<endl;
@@ -80,11 +81,20 @@ void MyStaff::on_tableView_clicked(const QModelIndex &index)
     QSqlRecord record=goods_model->record(index.row());
 
     ui->name->setText(record.value("goods_name").toString());
+    qDebug()<<record.value("goods_name").toString()<<endl;
     ui->cost->setText(record.value("cost").toString());
+    qDebug()<<record.value("cost").toString()<<endl;
     ui->price->setText(record.value("price").toString());
+    qDebug()<<record.value("price").toString()<<endl;
     ui->id->setText(record.value("goods_id").toString());
+    qDebug()<<record.value("goods_id").toString()<<endl;
     ui->spinBox->setValue(record.value("amount").toInt());
+    qDebug()<<record.value("amount").toString()<<endl;
     ui->comboBox->setCurrentText(record.value("kind").toString());
+    qDebug()<<record.value("kind").toString()<<endl;
+    goods_model->setTable("GOODS");
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
 }
 
 
