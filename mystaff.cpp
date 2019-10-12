@@ -70,36 +70,31 @@ void MyStaff::initMyStaff()
 
 
 //点击右侧商品，左边修改
+//todo:第二次点击 qdebug输出结果为000
 void MyStaff::on_tableView_clicked(const QModelIndex &index)
 {
-    onTableSelectChange(1);
-}
-void MyStaff::onTableSelectChange(int row)
-{
-    int r=1;
-    if(row!=0)
-        r=ui->tableView->currentIndex().row();
-    QModelIndex index;
-//    QSqlTableModel *goods_model=new QSqlTableModel(this);
+    cout<<"in on_tableView_click function"<<endl;
+    //    onTableSelectChange(1);
     goods_model->setTable("GOODS");
     goods_model->select();
-    index=goods_model->index(r,1);//名称
-    ui->name->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,3);//进价
-    ui->cost->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,4);//售价
-    ui->price->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,0);//id
-    ui->id->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,2);//数量
-    int x=goods_model->data(index).toInt();
-    ui->spinBox->setValue(x);
 
-    QSqlQuery query; //类别
-    query.exec(QString("select kind from GOODS where goods_name='%1'").arg(ui->name->text()));
-    query.next();
-    ui->comboBox->setCurrentText(query.value(0).toString());
+    QSqlRecord record=goods_model->record(index.row());
 
+    ui->name->setText(record.value("goods_name").toString());
+    qDebug()<<record.value("goods_name").toString()<<endl;
+    ui->cost->setText(record.value("cost").toString());
+    qDebug()<<record.value("cost").toString()<<endl;
+    ui->price->setText(record.value("price").toString());
+    qDebug()<<record.value("price").toString()<<endl;
+    ui->id->setText(record.value("goods_id").toString());
+    qDebug()<<record.value("goods_id").toString()<<endl;
+    ui->spinBox->setValue(record.value("amount").toInt());
+    qDebug()<<record.value("amount").toString()<<endl;
+    ui->comboBox->setCurrentText(record.value("kind").toString());
+    qDebug()<<record.value("kind").toString()<<endl;
+    goods_model->setTable("GOODS");
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
 }
 
 
@@ -186,4 +181,20 @@ void MyStaff::on_pushButton_2_clicked()
         goods_model->database().rollback(); //回滚
         QMessageBox::warning(this, tr("tableModel"), tr("数据库错误: %1").arg(goods_model->lastError().text()));
     }
+}
+
+//todo：多次点击会出问题
+void MyStaff::on_comboBox_currentTextChanged(const QString &arg1)
+{
+    goods_model->setTable("GOODS");
+    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
+}
+
+void MyStaff::on_pushButton_3_clicked()
+{
+    goods_model->setTable("GOODS");
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
 }
