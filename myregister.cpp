@@ -46,6 +46,9 @@ void MyRegister::on_register_2_clicked()
 
 }
 
+//fixme: after registing,login fail
+
+
 //检查用户输入的手机号是否已经被注册过
 bool MyRegister::registerCheck(QString customerId)
 {

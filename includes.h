@@ -32,8 +32,16 @@
 
 #include <QSqlQuery>
 #include <QColor>
+
 #include<QSqlRecord>
 #include<QTime>
+
+
+#include <QLabel>
+#include<QCheckBox>
+#include<QPushButton>
+
+
 
 #include<QSqlQueryModel>
 #define cout qDebug() << "[" <<__FILE__<<":"<<__LINE__<<"]"
