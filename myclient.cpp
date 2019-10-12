@@ -9,7 +9,8 @@ MyClient::MyClient(QWidget *parent) :
     //todo: 获得登录的客户id，才能生成购物车界面
     ui->setupUi(this);
     //cout<<customerId;
-    //initMyClient();
+    goods_model=new QSqlTableModel(this);
+    initMyClient();
 }
 
 MyClient::~MyClient()
@@ -98,32 +99,24 @@ void MyClient::initMyClient()
 }
 
 //点击右侧商品，左边修改
-//void MyClient::on_tableView_clicked(const QModelIndex &index)
-//{
-//    onTableSelectChange(1);
-//}
+void MyClient::on_tableView_clicked(const QModelIndex &index)
+{
 
-//void MyClient::onTableSelectChange(int row)
-//{
-//    int r=1;
-//    if(row!=0)
-//        r=ui->tableView->currentIndex().row();
-//    QModelIndex index;
-//    QSqlTableModel *goods_model=new QSqlTableModel(this);
-//    goods_model->setTable("GOODS");
-//    goods_model->select();
-//    index=goods_model->index(r,4);//售价
-//    ui->price->setText(goods_model->data(index).toString());
-//    index=goods_model->index(r,2);//库存
-//    ui->stock->setText(goods_model->data(index).toString());
-//    index=goods_model->index(r,4);//总价
-//    ui->price->setText(goods_model->data(index).toString());
-//    QSqlQuery query; //类别
-//    query.exec(QString("select kind from GOODS where goods_name='%1'").arg(ui->name->text()));
-//    query.next();
-//    ui->comboBox->setCurrentText(query.value(0).toString());
+    cout<<"in on_tableView_click function"<<endl;
+    //    onTableSelectChange(1);
+    goods_model->setTable("GOODS");
+    goods_model->select();
 
-//}
+    QSqlRecord record=goods_model->record(index.row());
+
+    ui->name->setText(record.value("goods_name").toString());
+    ui->price->setText(record.value("price").toString());
+    ui->spinBox->setValue(0);
+    ui->comboBox->setCurrentText(record.value("kind").toString());
+    ui->stock->setText(record.value("amount").toString());
+    ui->sum->setText("0");
+}
+
 
 //加入购物车--添加复选框
 void MyClient::on_addShoppingCart_clicked()
@@ -171,3 +164,27 @@ void MyClient::on_charge_clicked()
 }
 
 
+
+void MyClient::on_name_currentTextChanged(const QString &arg1)
+{
+    goods_model->setTable("GOODS");
+    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
+}
+
+void MyClient::on_pushButton_clicked()
+{
+    goods_model->setTable("GOODS");
+    goods_model->select();
+    ui->tableView->setModel(goods_model);
+}
+
+
+void MyClient::on_spinBox_valueChanged(int arg1)
+{
+    float price1=ui->price->text().toFloat();
+    float sum=arg1*price1;
+    QString sums = QString("%1").arg(sum);
+    ui->sum->setText(sums);
+}

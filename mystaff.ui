@@ -30,8 +30,10 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>681</width>
-      <height>409</height>
+
+      <width>671</width>
+      <height>429</height>
+
      </rect>
     </property>
     <attribute name="label">
@@ -81,7 +83,7 @@
       <rect>
        <x>0</x>
        <y>70</y>
-       <width>95</width>
+       <width>113</width>
        <height>24</height>
       </rect>
      </property>
@@ -194,7 +196,7 @@
        <x>0</x>
        <y>320</y>
        <width>82</width>
-       <height>36</height>
+       <height>54</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -259,7 +261,7 @@
       <rect>
        <x>120</x>
        <y>70</y>
-       <width>73</width>
+       <width>84</width>
        <height>23</height>
       </rect>
      </property>
@@ -280,14 +282,29 @@
       </item>
      </layout>
     </widget>
+    <widget class="QPushButton" name="pushButton_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>390</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>显示所有商品</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="toolBoxPage2">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>681</width>
-      <height>409</height>
+
+      <width>671</width>
+      <height>429</height>
+
      </rect>
     </property>
     <attribute name="label">
