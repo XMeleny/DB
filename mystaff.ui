@@ -19,10 +19,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>40</y>
-     <width>671</width>
-     <height>481</height>
+     <x>0</x>
+     <y>0</y>
+     <width>681</width>
+     <height>451</height>
     </rect>
    </property>
    <widget class="QWidget" name="toolBoxPage1">
@@ -30,8 +30,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>671</width>
-      <height>439</height>
+      <width>681</width>
+      <height>409</height>
      </rect>
     </property>
     <attribute name="label">
@@ -286,8 +286,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>671</width>
-      <height>439</height>
+      <width>681</width>
+      <height>409</height>
      </rect>
     </property>
     <attribute name="label">
