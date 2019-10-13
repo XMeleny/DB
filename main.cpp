@@ -1,7 +1,6 @@
 #include"login.h"
 #include"connection.h"
 #include <QApplication>
-#include <addrecordtest.h>
 
 int main(int argc, char *argv[])
 {

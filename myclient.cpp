@@ -6,10 +6,19 @@ MyClient::MyClient(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MyClient)
 {
-    //todo: 获得登录的客户id，才能生成购物车界面
     ui->setupUi(this);
-    //cout<<customerId;
+    cout<<customerId;
     goods_model=new QSqlTableModel(this);
+    QHBoxLayout *hLayout=new QHBoxLayout;
+    QLabel *buy=new QLabel("buy");
+    QLabel *goodsName=new QLabel("goods_id");
+    QLabel *amount= new QLabel("amount");
+    QLabel *sumMoney=new QLabel("sumMoney");
+    hLayout->addWidget(buy);
+    hLayout->addWidget(goodsName);
+    hLayout->addWidget(amount);
+    hLayout->addWidget(sumMoney);
+    ui->verticalLayout_shoppingChart->addLayout(hLayout);
     initMyClient();
 }
 
@@ -29,6 +38,8 @@ void MyClient::on_loginAgain_clicked()
 //界面初始化
 void MyClient::initMyClient()
 {
+    cout<<"init client"<<endl;
+
     QStringList strings;
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
@@ -62,32 +73,48 @@ void MyClient::initMyClient()
     //cout<<remaining;
 
 
-    //todo:初始化购物车,didn't test yet
+    //购物车初始化:
+
     query.prepare("select * from shopping_charts where customer_id=:customer_id");
     query.bindValue(":customer_id",customerId);
     query.exec();
 
-    //todo:change the id into name
-    QHBoxLayout *hLayout=new QHBoxLayout;
-    QLabel *buy=new QLabel("buy");
-    QLabel *goodsName=new QLabel("goods_id");
-    QLabel *amount= new QLabel("amount");
-    QLabel *sumMoney=new QLabel("sumMoney");
-    hLayout->addWidget(buy);
-    hLayout->addWidget(goodsName);
-    hLayout->addWidget(amount);
-    hLayout->addWidget(sumMoney);
-    ui->verticalLayout_shoppingChart->addLayout(hLayout);
-
     while(query.next())
     {
-        cout<<"record in shopping chart"<<endl;
+
+        //获得id,name,amount,sumMoney
+        //goods_id
+        int tempGoodsId=query.value("goods_id").toInt();
+        //goods_name
+        QSqlQuery temp;
+        temp.prepare("select goods_name from GOODS where goods_id=:goods_id");
+        temp.bindValue(":goods_id",tempGoodsId);
+        temp.exec();
+        QString tempGoodsName;
+        if (temp.next())
+        {
+            tempGoodsName=temp.value("goods_name").toString();
+        }
+
+
+        //new the object and set there text
         QHBoxLayout *hLayout=new QHBoxLayout;
         QCheckBox *buy=new QCheckBox("");
-        QLabel *goodsName=new QLabel(query.value("goods_id").toString());
+        QLabel *goodsName=new QLabel(tempGoodsName);
         QLabel *amount= new QLabel(query.value("amount").toString());
-        QLabel *sumMoney=new QLabel(query.value("money").toString());
+        QLabel *sumMoney=new QLabel(QString::number((query.value("amount").toInt()*query.value("money").toDouble())));
 
+        //fixme: 顾客加购的购物车不会改变。
+        //set the object's name, making it possible to select and buy
+
+
+        hLayout->setObjectName("hLayout"+tempGoodsId);
+        buy->setObjectName("buy"+tempGoodsId);
+        goodsName->setObjectName("goodsName"+tempGoodsId);
+        amount->setObjectName("amount"+tempGoodsId);
+        sumMoney->setObjectName("sumMoney"+tempGoodsId);
+
+        //dynamically add widgets
         hLayout->addWidget(buy);
         hLayout->addWidget(goodsName);
         hLayout->addWidget(amount);
@@ -118,18 +145,19 @@ void MyClient::on_tableView_clicked(const QModelIndex &index)
 }
 
 
-//加入购物车--添加复选框
+//todo:加入购物车
 void MyClient::on_addShoppingCart_clicked()
 {
 
 }
 
-//下单--清空复选框--扣钱
-void MyClient::on_check_clicked()
+
+//todo: 下单，提取勾选的货物，扣钱，删除已购买货物（小心数量）
+void MyClient::on_Btn_buy_clicked()
 {
+    cout<<"click the 下单 button"<<endl;
 
 }
-
 //充值
 void MyClient::on_charge_clicked()
 {
@@ -188,3 +216,6 @@ void MyClient::on_spinBox_valueChanged(int arg1)
     QString sums = QString("%1").arg(sum);
     ui->sum->setText(sums);
 }
+
+
+

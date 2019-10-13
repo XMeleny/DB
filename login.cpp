@@ -79,6 +79,7 @@ void LogIn::on_loginButton_clicked()
                 cout<<"登录成功";
                 //登陆成功后显示对话框
                 close();
+                //fixme: the init have run twice
                 MyClient client;
                 client.customerId = CustomerIdLogin;
                 client.initMyClient();

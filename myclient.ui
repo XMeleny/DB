@@ -31,7 +31,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>353</height>
+      <height>368</height>
      </rect>
     </property>
     <attribute name="label">
@@ -339,13 +339,13 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>353</height>
+      <height>368</height>
      </rect>
     </property>
     <attribute name="label">
      <string>购物车</string>
     </attribute>
-    <widget class="QPushButton" name="check">
+    <widget class="QPushButton" name="Btn_buy">
      <property name="geometry">
       <rect>
        <x>460</x>
@@ -376,7 +376,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>353</height>
+      <height>368</height>
      </rect>
     </property>
     <attribute name="label">

@@ -30,10 +30,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-
-      <width>671</width>
-      <height>429</height>
-
+      <width>681</width>
+      <height>409</height>
      </rect>
     </property>
     <attribute name="label">
@@ -301,10 +299,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-
-      <width>671</width>
-      <height>429</height>
-
+      <width>681</width>
+      <height>409</height>
      </rect>
     </property>
     <attribute name="label">
