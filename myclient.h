@@ -14,6 +14,7 @@ class MyClient : public QDialog
 public:
     explicit MyClient(QWidget *parent = nullptr);
     ~MyClient();
+
     //界面初始化
     void initMyClient();
     QString customerId;
@@ -25,8 +26,6 @@ private slots:
 
     void on_addShoppingCart_clicked();
 
-    void on_check_clicked();
-
     void on_charge_clicked();
 
     void on_tableView_clicked(const QModelIndex &index);
@@ -36,6 +35,8 @@ private slots:
     void on_pushButton_clicked();
 
     void on_spinBox_valueChanged(int arg1);
+
+    void on_Btn_buy_clicked();
 
 private:
     Ui::MyClient *ui;

@@ -31,7 +31,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>353</height>
+      <height>368</height>
      </rect>
     </property>
     <attribute name="label">
@@ -339,13 +339,13 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>353</height>
+      <height>368</height>
      </rect>
     </property>
     <attribute name="label">
      <string>购物车</string>
     </attribute>
-    <widget class="QPushButton" name="check">
+    <widget class="QPushButton" name="Btn_buy">
      <property name="geometry">
       <rect>
        <x>460</x>
@@ -358,6 +358,17 @@
       <string>下单</string>
      </property>
     </widget>
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>351</width>
+       <height>191</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_shoppingChart"/>
+    </widget>
    </widget>
    <widget class="QWidget" name="page">
     <property name="geometry">
@@ -365,7 +376,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>353</height>
+      <height>368</height>
      </rect>
     </property>
     <attribute name="label">

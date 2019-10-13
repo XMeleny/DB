@@ -42,7 +42,7 @@ end_time timestamp
 );
 
 
-create table SHOPPNG_CHARTS
+create table SHOPPING_CHARTS
 (
 goods_id smallint unsigned,
 customer_id char(11),
