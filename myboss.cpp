@@ -45,20 +45,20 @@ void MyBoss::on_yearBill_clicked()
 void MyBoss::on_addDiscount_clicked()
 {
 
-        QSqlQuery query;
-        query.prepare("insert into discounts(discount_id,discount_name,kind,start_time,end_time) "
-                      "values(?,?,?,?,?)");
-        query.addBindValue(ui->id->text());
-        query.addBindValue(ui->name->text());
-        query.addBindValue(ui->kind->currentText());
-        query.addBindValue(ui->start->text());
-        query.addBindValue(ui->end->text());
-        query.exec();
+    QSqlQuery query;
+    query.prepare("insert into discounts(discount_id,discount_name,kind,start_time,end_time) "
+                  "values(?,?,?,?,?)");
+    query.addBindValue(ui->id->text());
+    query.addBindValue(ui->name->text());
+    query.addBindValue(ui->kind->currentText());
+    query.addBindValue(ui->start->text());
+    query.addBindValue(ui->end->text());
+    query.exec();
 
-        //刷新tableview信息
-        discount_model->setTable("discounts");
-        discount_model->select();
-        ui->tableView->setModel(discount_model);
+    //刷新tableview信息
+    discount_model->setTable("discounts");
+    discount_model->select();
+    ui->tableView->setModel(discount_model);
 }
 
 

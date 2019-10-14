@@ -8,10 +8,12 @@ MyClient::MyClient(QWidget *parent) :
 {
     ui->setupUi(this);
     cout<<customerId;
+
     goods_model=new QSqlTableModel(this);
+
     QHBoxLayout *hLayout=new QHBoxLayout;
     QLabel *buy=new QLabel("buy");
-    QLabel *goodsName=new QLabel("goods_id");
+    QLabel *goodsName=new QLabel("goods_name");
     QLabel *amount= new QLabel("amount");
     QLabel *sumMoney=new QLabel("sumMoney");
     hLayout->addWidget(buy);
@@ -19,6 +21,7 @@ MyClient::MyClient(QWidget *parent) :
     hLayout->addWidget(amount);
     hLayout->addWidget(sumMoney);
     ui->verticalLayout_shoppingChart->addLayout(hLayout);
+
     initMyClient();
 }
 
@@ -80,10 +83,8 @@ void MyClient::initMyClient()
     query.exec();
 
     while(query.next())
-    {
-
-        //获得id,name,amount,sumMoney
-        //goods_id
+    {        
+        //获得goods_id
         int tempGoodsId=query.value("goods_id").toInt();
         //goods_name
         QSqlQuery temp;
@@ -108,11 +109,11 @@ void MyClient::initMyClient()
         //set the object's name, making it possible to select and buy
 
 
-        hLayout->setObjectName("hLayout"+tempGoodsId);
-        buy->setObjectName("buy"+tempGoodsId);
-        goodsName->setObjectName("goodsName"+tempGoodsId);
-        amount->setObjectName("amount"+tempGoodsId);
-        sumMoney->setObjectName("sumMoney"+tempGoodsId);
+        hLayout->setObjectName("hLayout"+QString::number(tempGoodsId));
+        buy->setObjectName("buy"+QString::number(tempGoodsId));
+        goodsName->setObjectName("goodsName"+QString::number(tempGoodsId));
+        amount->setObjectName("amount"+QString::number(tempGoodsId));
+        sumMoney->setObjectName("sumMoney"+QString::number(tempGoodsId));
 
         //dynamically add widgets
         hLayout->addWidget(buy);
@@ -142,12 +143,74 @@ void MyClient::on_tableView_clicked(const QModelIndex &index)
     ui->comboBox->setCurrentText(record.value("kind").toString());
     ui->stock->setText(record.value("amount").toString());
     ui->sum->setText("0");
+    ui->id->setText(record.value("goods_id").toString());
 }
 
 
 //todo:加入购物车
 void MyClient::on_addShoppingCart_clicked()
 {
+
+    int tempGoodsId=ui->id->text().toInt();
+    QString tempGoodsName=ui->name->text();
+    int tempAmount=ui->spinBox->value();
+    float tempPrice=ui->price->text().toFloat();
+
+    //todo:判断加购数量，如果为0或大于库存，提示错误，不进行更新
+
+    QSqlQuery query;
+    query.prepare("select * from shopping_charts where goods_id=:goods_id and customer_id=:customer_id");
+    query.bindValue(":goods_id",tempGoodsId);
+    query.bindValue(":customer_id",customerId);
+    query.exec();
+    cout<<query.lastError();
+
+    //todo:加购时减少库存
+    //判断主键是否已经存在，如果存在，则加数量即可
+    if (query.next())
+    {
+        query.prepare("update shopping_charts set amount=amount+?, money=money+? "
+                      "where goods_id=? and customer_id=?");
+        query.addBindValue(tempAmount);
+        query.addBindValue(tempPrice);
+        query.addBindValue(tempGoodsId);
+        query.addBindValue(customerId);
+        query.exec();
+        cout<<query.lastError();
+
+        //todo:动态更新购物车页面
+        query.prepare("select amount,money from shopping_charts "
+                      "where goods_id=:goods_id and customer_id =:customer_id");
+        query.bindValue(":goods_id",tempGoodsId);
+        query.bindValue("customer_id",customerId);
+        query.exec();
+        cout<<query.lastError();
+
+
+    }
+    else//如果不在，新添数量
+    {
+        query.prepare("insert into shopping_charts (goods_id,customer_id,money,amount) "
+                      "values (?,?,?,?)");
+        query.addBindValue(tempGoodsId);
+        query.addBindValue(customerId);
+        query.addBindValue(ui->sum->text());
+        query.addBindValue(tempAmount);
+        query.exec();
+
+        cout<<query.lastError();
+
+        QHBoxLayout *hLayout=new QHBoxLayout();
+        QCheckBox *buy=new QCheckBox("");
+        QLabel *goods_name=new QLabel(tempGoodsName);//fixme:select goods_name where goods_id
+        QLabel *amount=new QLabel(QString::number(tempAmount));
+        QLabel *sumMoney=new QLabel(QString::number(tempAmount*tempPrice));
+        hLayout->addWidget(buy);
+        hLayout->addWidget(goods_name);
+        hLayout->addWidget(amount);
+        hLayout->addWidget(sumMoney);
+        ui->verticalLayout_shoppingChart->addLayout(hLayout);
+    }
 
 }
 

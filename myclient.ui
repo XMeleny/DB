@@ -121,7 +121,7 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>60</y>
+       <y>80</y>
        <width>141</width>
        <height>24</height>
       </rect>
@@ -129,6 +129,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="label_3">
+        <property name="lineWidth">
+         <number>6</number>
+        </property>
         <property name="text">
          <string>名称：</string>
         </property>
@@ -331,6 +334,38 @@
      <property name="text">
       <string>显示所有商品</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>141</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>id：</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="id">
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="toolBoxPage2">
