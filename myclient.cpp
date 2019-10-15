@@ -183,9 +183,9 @@ void MyClient::updateShoppingCharts()
 
     while(query.next())
     {
-        //获得goods_id
+        //get goods_id
         int tempGoodsId=query.value("goods_id").toInt();
-        //goods_name
+        //get goods_name
         QSqlQuery temp;
         temp.prepare("select goods_name from GOODS where goods_id=:goods_id");
         temp.bindValue(":goods_id",tempGoodsId);
