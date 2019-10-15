@@ -18,6 +18,8 @@ public:
     //界面初始化
     void initMyClient();
     QString customerId;
+    QWidget *shoppingWidget;
+    QVBoxLayout *shoppingLayout;
     //商品信息数据网格与表单联动
     void onTableSelectChange(int row);
 
@@ -38,9 +40,12 @@ private slots:
 
     void on_Btn_buy_clicked();
 
+    void on_deleteButton_clicked();
+
 private:
     Ui::MyClient *ui;
     QSqlTableModel *goods_model;
+    void updateShoppingCharts();
 };
 
 #endif // MYCLIENT_H
