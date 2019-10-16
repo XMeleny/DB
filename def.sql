@@ -12,14 +12,13 @@ create table CUSTOMERS
 (
 customer_id char(11) primary key,
 customer_name varchar(40),
-address tinytext,
 psw varchar(20),
 money float(10,2) unsigned
 );
 
 
 --  外键要先定义，再标记
-create table ORDERS
+/* create table ORDERS
 (
 order_id smallint unsigned,
 goods_id smallint unsigned,
@@ -30,6 +29,20 @@ timing timestamp,
 address varchar(100),
 activity_id smallint,
 primary key (order_id,goods_id) 
+); */
+
+create table ORDERS
+(
+order_id smallint unsigned,
+goods_id_list varchar(100),
+customer_id char(11),
+goods_amount_list varchar(100),
+totoal float,
+timing date,
+address varchar(100),
+activity_id smallint,
+foreign key(customer_id) references CUSTOMERS(customer_id),
+primary key (order_id) 
 );
 
 create table DISCOUNTS
@@ -37,8 +50,8 @@ create table DISCOUNTS
 discount_id smallint unsigned primary key,
 discount_name tinytext,
 kind varchar(40),
-start_time timestamp,
-end_time timestamp
+start_time date,
+end_time date
 );
 
 

@@ -17,7 +17,7 @@ MyBoss::~MyBoss()
 {
     delete ui;
 }
-
+//重新登录
 void MyBoss::on_loginAgain_clicked()
 {
     close();
@@ -61,7 +61,6 @@ void MyBoss::on_addDiscount_clicked()
     ui->tableView->setModel(discount_model);
 }
 
-
 //删除优惠
 void MyBoss::on_deleteDiscount_clicked()
 {
@@ -87,11 +86,15 @@ void MyBoss::on_deleteDiscount_clicked()
 
 }
 
+
+
+
 void MyBoss::initMyStaff()
 {
     //    if(createConnection())
     //    {
     QStringList strings;
+    //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
 
@@ -113,34 +116,38 @@ void MyBoss::initMyStaff()
     discount_model->select();
     ui->tableView->setModel(discount_model);
 
-    //    }
-
 }
+
+
 void MyBoss::on_tableView_clicked(const QModelIndex &index)
 {
+    cout<<"in on_tableView_clicked()";
     onTableSelectChange(1);
+
 }
 
 
 void MyBoss::onTableSelectChange(int row)
 {
+    cout<<"in onTableSelectChange()";
     int r=1;
     if(row!=0)
         r=ui->tableView->currentIndex().row();
     QModelIndex index;
-    //    QSqlTableModel *discount_model=new QSqlTableModel(this);
+
     discount_model->setTable("discounts");
-    discount_model->select();
+    discount_model->select();//获取表
     index=discount_model->index(r,0);//id
     ui->id->setText(discount_model->data(index).toString());
+
     index=discount_model->index(r,1);//名称
     ui->name->setText(discount_model->data(index).toString());
     index=discount_model->index(r,3);//开始时间
     ui->start->setText(discount_model->data(index).toString());
-    //    ui->start->setText(discount_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
+    //ui->start->setText(discount_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
     index=discount_model->index(r,4);//结束时间
     ui->end->setText(discount_model->data(index).toString());
-    //    ui->end->setText(discount_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
+    //ui->end->setText(discount_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
     QSqlQuery query; //类别
     query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
     query.next();
@@ -152,28 +159,22 @@ void MyBoss::onTableSelectChange(int row)
 
 }
 
+//下拉框 切换优惠种类的时候
 void MyBoss::on_kind_currentTextChanged(const QString &arg1)
 {
+
+    cout<<"in on_kind_currentTextChanged()";
     discount_model->setTable("discounts");
     discount_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
     discount_model->select();
     ui->tableView->setModel(discount_model);
 }
 
-//显示所有商品
+//点击按钮 显示所有优惠
 void MyBoss::on_pushButton_clicked()
 {
-    //    //if(createConnection())
-    //    //{
 
-    //    QSqlQuery query;
-    //    query.exec("select *from GOODS;");
-    //    while(query.next())
-    //    {
-    //        qDebug()<<query.value(0).toInt()<<query.value(1).toString();
-    //    }
-    //    //}
-
+    cout<<"in on_pushButton_clicked()";
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);

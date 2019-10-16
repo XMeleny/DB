@@ -41,8 +41,8 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>250</y>
-       <width>75</width>
+       <y>220</y>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -326,8 +326,8 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>290</y>
-       <width>91</width>
+       <y>260</y>
+       <width>111</width>
        <height>23</height>
       </rect>
      </property>
@@ -335,7 +335,7 @@
       <string>显示所有商品</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -383,8 +383,8 @@
     <widget class="QPushButton" name="Btn_buy">
      <property name="geometry">
       <rect>
-       <x>460</x>
-       <y>320</y>
+       <x>450</x>
+       <y>190</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -430,34 +430,11 @@
       <string>充值金额：</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_16">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>100</y>
-       <width>54</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>账号：</string>
-     </property>
-    </widget>
     <widget class="QLineEdit" name="ChargeMoney">
      <property name="geometry">
       <rect>
        <x>190</x>
        <y>30</y>
-       <width>113</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_3">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>100</y>
        <width>113</width>
        <height>20</height>
       </rect>
