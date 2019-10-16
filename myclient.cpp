@@ -11,16 +11,10 @@ MyClient::MyClient(QWidget *parent) :
 
     goods_model=new QSqlTableModel(this);
 
-    QHBoxLayout *hLayout=new QHBoxLayout;
-    QLabel *buy=new QLabel("buy");
-    QLabel *goodsName=new QLabel("goods_name");
-    QLabel *amount= new QLabel("amount");
-    QLabel *sumMoney=new QLabel("sumMoney");
-    hLayout->addWidget(buy);
-    hLayout->addWidget(goodsName);
-    hLayout->addWidget(amount);
-    hLayout->addWidget(sumMoney);
-    ui->verticalLayout_shoppingChart->addLayout(hLayout);
+    shoppingWidget=new QWidget;
+    shoppingLayout=new QVBoxLayout;
+    shoppingWidget->setLayout(shoppingLayout);
+    ui->verticalLayout_3->addWidget(shoppingWidget);
 
     //initMyClient();
 }
@@ -81,64 +75,18 @@ void MyClient::initMyClient()
 
 
     //购物车初始化:
-
-    query.prepare("select * from shopping_charts where customer_id=:customer_id");
-    query.bindValue(":customer_id",customerId);
-    query.exec();
-
-    while(query.next())
-    {        
-        //获得goods_id
-        int tempGoodsId=query.value("goods_id").toInt();
-        //goods_name
-        QSqlQuery temp;
-        temp.prepare("select goods_name from GOODS where goods_id=:goods_id");
-        temp.bindValue(":goods_id",tempGoodsId);
-        temp.exec();
-        QString tempGoodsName;
-        if (temp.next())
-        {
-            tempGoodsName=temp.value("goods_name").toString();
-        }
-
-
-        //new the object and set there text
-        QHBoxLayout *hLayout=new QHBoxLayout;
-        QCheckBox *buy=new QCheckBox("");
-        QLabel *goodsName=new QLabel(tempGoodsName);
-        QLabel *amount= new QLabel(query.value("amount").toString());
-        QLabel *sumMoney=new QLabel(QString::number((query.value("amount").toInt()*query.value("money").toDouble())));
-
-        //fixme: 顾客加购的购物车不会改变。
-        //set the object's name, making it possible to select and buy
-
-
-        hLayout->setObjectName("hLayout"+QString::number(tempGoodsId));
-        buy->setObjectName("buy"+QString::number(tempGoodsId));
-        goodsName->setObjectName("goodsName"+QString::number(tempGoodsId));
-        amount->setObjectName("amount"+QString::number(tempGoodsId));
-        sumMoney->setObjectName("sumMoney"+QString::number(tempGoodsId));
-
-        //dynamically add widgets
-        hLayout->addWidget(buy);
-        hLayout->addWidget(goodsName);
-        hLayout->addWidget(amount);
-        hLayout->addWidget(sumMoney);
-
-        ui->verticalLayout_shoppingChart->addLayout(hLayout);
-    }
-
+    updateShoppingCharts();
 }
 
 
 //todo:加入购物车
 void MyClient::on_addShoppingCart_clicked()
 {
-
     int tempGoodsId=ui->id->text().toInt();
     QString tempGoodsName=ui->name->text();
     int tempAmount=ui->spinBox->value();
     float tempPrice=ui->price->text().toFloat();
+
 
     //判断加购数量，如果为0或大于库存，提示错误，不进行更新
 
@@ -151,6 +99,15 @@ void MyClient::on_addShoppingCart_clicked()
     }
 
     //
+
+    if(tempAmount==0)//todo:判断加购数量要小于库存，窗口提醒
+    {
+        return;
+    }
+
+
+    //判断主键是否存在（即该用户是否曾经将该物品加购）
+
     QSqlQuery query;
     query.prepare("select * from shopping_charts where goods_id=:goods_id and customer_id=:customer_id");
     query.bindValue(":goods_id",tempGoodsId);
@@ -161,6 +118,7 @@ void MyClient::on_addShoppingCart_clicked()
     //判断主键是否已经存在，如果存在，则加数量即可
     if (query.next())
     {
+        //更新数据库
         query.prepare("update shopping_charts set amount=amount+?, money=money+? "
                       "where goods_id=? and customer_id=?");
         query.addBindValue(tempAmount);
@@ -170,18 +128,12 @@ void MyClient::on_addShoppingCart_clicked()
         query.exec();
         cout<<query.lastError();
 
-        //todo:动态更新购物车页面
-        query.prepare("select amount,money from shopping_charts "
-                      "where goods_id=:goods_id and customer_id =:customer_id");
-        query.bindValue(":goods_id",tempGoodsId);
-        query.bindValue("customer_id",customerId);
-        query.exec();
-        cout<<query.lastError();
-
-
+        //更新购物车
+        updateShoppingCharts();
     }
     else//如果不在，新添数量
     {
+        //更新数据库
         query.prepare("insert into shopping_charts (goods_id,customer_id,money,amount) "
                       "values (?,?,?,?)");
         query.addBindValue(tempGoodsId);
@@ -189,19 +141,10 @@ void MyClient::on_addShoppingCart_clicked()
         query.addBindValue(ui->sum->text());
         query.addBindValue(tempAmount);
         query.exec();
-
         cout<<query.lastError();
 
-        QHBoxLayout *hLayout=new QHBoxLayout();
-        QCheckBox *buy=new QCheckBox("");
-        QLabel *goods_name=new QLabel(tempGoodsName);//fixme:select goods_name where goods_id
-        QLabel *amount=new QLabel(QString::number(tempAmount));
-        QLabel *sumMoney=new QLabel(QString::number(tempAmount*tempPrice));
-        hLayout->addWidget(buy);
-        hLayout->addWidget(goods_name);
-        hLayout->addWidget(amount);
-        hLayout->addWidget(sumMoney);
-        ui->verticalLayout_shoppingChart->addLayout(hLayout);
+        //更新购物车
+        updateShoppingCharts();
     }
 
 }
@@ -238,6 +181,68 @@ void MyClient::on_Btn_buy_clicked()
 
 }
 
+void MyClient::updateShoppingCharts()
+{
+    cout<<"in update shoppingCharts";
+
+    //warning:it would find all widgets includes checkbox and
+    QList<QWidget*> widgetList=shoppingWidget->findChildren<QWidget*>();
+
+    //delete all
+    for(int i=0;i<widgetList.length();i++)
+    {
+        QWidget *widget=widgetList.at(i);
+        shoppingLayout->removeWidget(widget);
+        widget->deleteLater();
+    }
+
+    //add all
+    QSqlQuery query;
+    query.prepare("select * from shopping_charts where customer_id=:customer_id");
+    query.bindValue(":customer_id",customerId);
+    query.exec();
+
+    while(query.next())
+    {
+        //get goods_id
+        int tempGoodsId=query.value("goods_id").toInt();
+        //get goods_name
+        QSqlQuery temp;
+        temp.prepare("select goods_name from GOODS where goods_id=:goods_id");
+        temp.bindValue(":goods_id",tempGoodsId);
+        temp.exec();
+        QString tempGoodsName;
+        if (temp.next())
+        {
+            tempGoodsName=temp.value("goods_name").toString();
+        }
+
+        //new the object and set there text
+        QWidget *record=new QWidget;
+        QHBoxLayout *hLayout=new QHBoxLayout;
+        QCheckBox *buy=new QCheckBox("");
+        QLabel *goodsName=new QLabel(tempGoodsName);
+        QLabel *amount= new QLabel(query.value("amount").toString());
+        QLabel *sumMoney=new QLabel(QString::number((query.value("amount").toInt()*query.value("money").toDouble())));
+
+        //set the object's name, making it possible to select and buy
+
+//        hLayout->setObjectName("hLayout"+QString::number(tempGoodsId));
+//        buy->setObjectName("buy"+QString::number(tempGoodsId));
+//        goodsName->setObjectName("goodsName"+QString::number(tempGoodsId));
+//        amount->setObjectName("amount"+QString::number(tempGoodsId));
+//        sumMoney->setObjectName("sumMoney"+QString::number(tempGoodsId));
+
+        //dynamically add widgets
+        hLayout->addWidget(buy);
+        hLayout->addWidget(goodsName);
+        hLayout->addWidget(amount);
+        hLayout->addWidget(sumMoney);
+        record->setLayout(hLayout);
+        shoppingLayout->addWidget(record);
+    }
+}
+
 //充值
 void MyClient::on_charge_clicked()
 {
@@ -272,7 +277,18 @@ void MyClient::on_charge_clicked()
 }
 
 
+
 //显示所有商品
+
+//void MyClient::on_name_currentTextChanged(const QString &arg1)
+//{
+//    goods_model->setTable("GOODS");
+//    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
+//    goods_model->select();
+//    ui->tableView->setModel(goods_model);
+//}
+
+
 void MyClient::on_pushButton_clicked()
 {
     ui->comboBox->setCurrentText("全部");
@@ -287,9 +303,11 @@ void MyClient::on_pushButton_clicked()
     ui->spinBox->setValue(0);
     ui->sum->setText("");
 
+
 }
 
 //选择数量
+
 void MyClient::on_spinBox_valueChanged(int arg1)
 {
     float price1=ui->price->text().toFloat();
@@ -297,6 +315,7 @@ void MyClient::on_spinBox_valueChanged(int arg1)
     QString sums = QString("%1").arg(sum);
     ui->sum->setText(sums);
 }
+
 
 //点击右侧商品，左边修改
 void MyClient::on_tableView_clicked(const QModelIndex &index)
@@ -388,3 +407,10 @@ void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
 //    goods_model->select();
 //    ui->tableView->setModel(goods_model);
 //}
+
+void MyClient::on_deleteButton_clicked()
+{
+    cout<<"on delete button click";
+    updateShoppingCharts();
+}
+
