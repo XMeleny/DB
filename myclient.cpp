@@ -79,7 +79,7 @@ void MyClient::initMyClient()
 }
 
 
-//todo:加入购物车
+
 void MyClient::on_addShoppingCart_clicked()
 {
     int tempGoodsId=ui->id->text().toInt();
@@ -116,7 +116,7 @@ void MyClient::on_addShoppingCart_clicked()
     cout<<query.lastError();
 
     //判断主键是否已经存在，如果存在，则加数量即可
-    if (query.next())
+    if (query.next())//存在，update
     {
         //更新数据库
         query.prepare("update shopping_charts set amount=amount+?, money=money+? "
@@ -131,7 +131,7 @@ void MyClient::on_addShoppingCart_clicked()
         //更新购物车
         updateShoppingCharts();
     }
-    else//如果不在，新添数量
+    else//不在，insert
     {
         //更新数据库
         query.prepare("insert into shopping_charts (goods_id,customer_id,money,amount) "
@@ -178,7 +178,62 @@ int MyClient::showGoodsAmount(int goodsId)//根据id查找商品库存
 void MyClient::on_Btn_buy_clicked()
 {
     cout<<"click the 下单 button"<<endl;
+    QSqlQuery query;
+    QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
+    for (int i=0;i<checkboxList.length();i++)
+    {
+        QCheckBox *checkbox=checkboxList.at(i);
+        if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
+        {
+            //获得goodsId
+            int goodsId=checkbox->objectName().mid(3).toInt();
+            int amount=shoppingWidget->findChild<QLabel*>("amount"+QString::number(goodsId))->text().toInt();
+//            cout<<goodsId;
+            //已完成：根据购物车勾选状态获取要购买的商品的goods_id
+            //todo：处理数据库
+            //todo：判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
+            //todo:库存不够，则跳出弹窗，不够库存
+            //todo:check goods's amount
+            query.prepare("select amount from GOODS where goods_id=:goods_id");
+            query.bindValue(":goods_id",goodsId);
+            query.exec();
+//            cout<<query.lastError();
+            if (query.next())
+            {
+                if (query.value("amount")>amount)//enougn to sell
+                {
+                    //todo:deal with the tables
+                    query.prepare("update GOODS set amount=amount-:amount where goods_id=:goods_id");
+                    query.bindValue(":amount",amount);
+                    query.bindValue(":goods_id",goodsId);
+                    query.exec();
+                    cout<<"in updating goods:"<<query.lastError();
 
+                    query.prepare("delete from SHOPPING_CHARTS where goods_id=:goods_id and customer_id=:customer_id");
+                    query.bindValue(":goods_id",goodsId);
+                    query.bindValue(":customer_id",customerId);
+                    query.exec();
+                    cout<<"in deleting from SHOPPING_CHARTS"<<query.lastError();
+
+                    //todo:insert into orders
+                    query.prepare("insert into ORDERS () values()");
+                    query.addBindValue(customerId);
+                }
+                else//not enough to sell
+                {
+                    //todo: alert that not enough to sell
+                }
+            }
+            else//这情况不应该出现
+            {
+                cout<<"cant find such goods";
+            }
+
+
+        }
+    }
+    //处理ui
+    updateShoppingCharts();
 }
 
 void MyClient::updateShoppingCharts()
@@ -227,11 +282,11 @@ void MyClient::updateShoppingCharts()
 
         //set the object's name, making it possible to select and buy
 
-//        hLayout->setObjectName("hLayout"+QString::number(tempGoodsId));
-//        buy->setObjectName("buy"+QString::number(tempGoodsId));
-//        goodsName->setObjectName("goodsName"+QString::number(tempGoodsId));
-//        amount->setObjectName("amount"+QString::number(tempGoodsId));
-//        sumMoney->setObjectName("sumMoney"+QString::number(tempGoodsId));
+        record->setObjectName("record"+QString::number(tempGoodsId));
+        buy->setObjectName("buy"+QString::number(tempGoodsId));
+        goodsName->setObjectName("goodsName"+QString::number(tempGoodsId));
+        amount->setObjectName("amount"+QString::number(tempGoodsId));
+        sumMoney->setObjectName("sumMoney"+QString::number(tempGoodsId));
 
         //dynamically add widgets
         hLayout->addWidget(buy);
@@ -315,6 +370,7 @@ void MyClient::on_spinBox_valueChanged(int arg1)
     QString sums = QString("%1").arg(sum);
     ui->sum->setText(sums);
 }
+
 
 
 //点击右侧商品，左边修改
@@ -408,9 +464,4 @@ void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
 //    ui->tableView->setModel(goods_model);
 //}
 
-void MyClient::on_deleteButton_clicked()
-{
-    cout<<"on delete button click";
-    updateShoppingCharts();
-}
 
