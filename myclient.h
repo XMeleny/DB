@@ -22,6 +22,7 @@ public:
     QVBoxLayout *shoppingLayout;
     //商品信息数据网格与表单联动
     void onTableSelectChange(int row);
+    int showGoodsAmount(int goodsId);
 
 private slots:
     void on_loginAgain_clicked();
@@ -32,13 +33,14 @@ private slots:
 
     void on_tableView_clicked(const QModelIndex &index);
 
-    void on_name_currentTextChanged(const QString &arg1);
-
     void on_pushButton_clicked();
 
     void on_spinBox_valueChanged(int arg1);
 
     void on_Btn_buy_clicked();
+
+
+    void on_comboBox_currentTextChanged(const QString &arg1);
 
 
 private:
