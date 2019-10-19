@@ -40,7 +40,6 @@ private slots:
 
     void on_Btn_buy_clicked();
 
-    void on_deleteButton_clicked();
 
 private:
     Ui::MyClient *ui;

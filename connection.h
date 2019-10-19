@@ -3,8 +3,11 @@
 #include<includes.h>
 static bool createConnection()
 {
-QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
 
+
+//    db.setHostName("116.56.158.101");//todo
+//    db.setPort(3306);
     db.setDatabaseName("test");    //使用哪个数据库
     db.setUserName("root");
     db.setPassword("123456");
@@ -17,6 +20,7 @@ QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     else
     {
         cout<<"linking database success!!!";
+        cout<<db.lastError();
         return true;
     }
 
