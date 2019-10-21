@@ -31,7 +31,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>368</height>
+      <height>327</height>
      </rect>
     </property>
     <attribute name="label">
@@ -374,7 +374,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>368</height>
+      <height>327</height>
      </rect>
     </property>
     <attribute name="label">
@@ -383,10 +383,8 @@
     <widget class="QPushButton" name="Btn_buy">
      <property name="geometry">
       <rect>
-
        <x>360</x>
        <y>300</y>
-
        <width>75</width>
        <height>23</height>
       </rect>
@@ -459,7 +457,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>368</height>
+      <height>327</height>
      </rect>
     </property>
     <attribute name="label">
@@ -525,6 +523,47 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <attribute name="label">
+     <string>下单</string>
+    </attribute>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>40</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>地址：</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="address">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>40</y>
+       <width>113</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>150</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>确定下单</string>
      </property>
     </widget>
    </widget>

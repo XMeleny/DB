@@ -79,7 +79,7 @@ void MyClient::initMyClient()
 }
 
 
-
+//todo：减余额，下单判断库存
 void MyClient::on_addShoppingCart_clicked()
 {
     int tempGoodsId=ui->id->text().toInt();
@@ -177,6 +177,7 @@ int MyClient::showGoodsAmount(int goodsId)//根据id查找商品库存
 //todo: 下单，提取勾选的货物，扣钱，删除已购买货物（小心数量）
 void MyClient::on_Btn_buy_clicked()
 {
+
     cout<<"click the 下单 button"<<endl;
     QSqlQuery query;
     QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
@@ -185,55 +186,11 @@ void MyClient::on_Btn_buy_clicked()
         QCheckBox *checkbox=checkboxList.at(i);
         if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
         {
-            //获得goodsId
-            int goodsId=checkbox->objectName().mid(3).toInt();
-            int amount=shoppingWidget->findChild<QLabel*>("amount"+QString::number(goodsId))->text().toInt();
-//            cout<<goodsId;
-            //已完成：根据购物车勾选状态获取要购买的商品的goods_id
-            //todo：处理数据库
-            //todo：判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
-            //todo:库存不够，则跳出弹窗，不够库存
-            //todo:check goods's amount
-            query.prepare("select amount from GOODS where goods_id=:goods_id");
-            query.bindValue(":goods_id",goodsId);
-            query.exec();
-//            cout<<query.lastError();
-            if (query.next())
-            {
-                if (query.value("amount")>amount)//enougn to sell
-                {
-                    //todo:deal with the tables
-                    query.prepare("update GOODS set amount=amount-:amount where goods_id=:goods_id");
-                    query.bindValue(":amount",amount);
-                    query.bindValue(":goods_id",goodsId);
-                    query.exec();
-                    cout<<"in updating goods:"<<query.lastError();
 
-                    query.prepare("delete from SHOPPING_CHARTS where goods_id=:goods_id and customer_id=:customer_id");
-                    query.bindValue(":goods_id",goodsId);
-                    query.bindValue(":customer_id",customerId);
-                    query.exec();
-                    cout<<"in deleting from SHOPPING_CHARTS"<<query.lastError();
-
-                    //todo:insert into orders
-                    query.prepare("insert into ORDERS () values()");
-                    query.addBindValue(customerId);
-                }
-                else//not enough to sell
-                {
-                    //todo: alert that not enough to sell
-                }
-            }
-            else//这情况不应该出现
-            {
-                cout<<"cant find such goods";
-            }
-
-
-        }
+    ui->toolBox->setCurrentIndex(3);
     }
-    //处理ui
-    updateShoppingCharts();
+        }
+
 }
 
 void MyClient::updateShoppingCharts()
@@ -257,6 +214,8 @@ void MyClient::updateShoppingCharts()
     query.bindValue(":customer_id",customerId);
     query.exec();
 
+
+
     while(query.next())
     {
         //get goods_id
@@ -266,11 +225,25 @@ void MyClient::updateShoppingCharts()
         temp.prepare("select goods_name from GOODS where goods_id=:goods_id");
         temp.bindValue(":goods_id",tempGoodsId);
         temp.exec();
+
+        QSqlQuery query1;
+        query1.prepare("select * from goods where goods_id=:goods_id");
+        query1.bindValue(":goods_id",tempGoodsId);
+        query1.exec();
+
         QString tempGoodsName;
         if (temp.next())
         {
             tempGoodsName=temp.value("goods_name").toString();
         }
+
+        float tempGoodsSum;
+        if (query1.next())
+        {
+            float price=query1.value("price").toFloat();
+            tempGoodsSum=price*query.value("amount").toFloat();
+        }
+        QString sum=QString("%1").arg(tempGoodsSum);
 
         //new the object and set there text
         QWidget *record=new QWidget;
@@ -278,7 +251,7 @@ void MyClient::updateShoppingCharts()
         QCheckBox *buy=new QCheckBox("");
         QLabel *goodsName=new QLabel(tempGoodsName);
         QLabel *amount= new QLabel(query.value("amount").toString());
-        QLabel *sumMoney=new QLabel(QString::number((query.value("amount").toInt()*query.value("money").toDouble())));
+        QLabel *sumMoney=new QLabel(sum);
 
         //set the object's name, making it possible to select and buy
 
@@ -465,3 +438,85 @@ void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
 //}
 
 
+//确定下单按钮
+void MyClient::on_pushButton_2_clicked()
+{
+    QSqlQuery query;
+    float sum=0;
+    QString goodsIds,goodsAmounts,id,amt;
+    QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
+    for (int i=0;i<checkboxList.length();i++)
+    {
+        QCheckBox *checkbox=checkboxList.at(i);
+        if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
+        {
+
+            //获得goodsId
+            int goodsId=checkbox->objectName().mid(3).toInt();
+            id=QString::number(goodsId);
+            //订单中所以商品的id
+            goodsIds=goodsIds+" "+id;
+            int amount=shoppingWidget->findChild<QLabel*>("amount"+QString::number(goodsId))->text().toInt();
+            amt=QString::number(amount);
+            //订单中所以商品id对应的数量
+            goodsAmounts=goodsAmounts+" "+amt;
+
+            float sumMoney=shoppingWidget->findChild<QLabel*>("sumMoney"+QString::number(goodsId))->text().toFloat();
+            sum+=sumMoney;
+//            cout<<goodsId;
+            //已完成：根据购物车勾选状态获取要购买的商品的goods_id
+            //todo：处理数据库
+            //todo：判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
+            //todo:库存不够，则跳出弹窗，不够库存
+            //todo:check goods's amount
+            query.prepare("select amount from GOODS where goods_id=:goods_id");
+            query.bindValue(":goods_id",goodsId);
+            query.exec();
+//            cout<<query.lastError();
+            if (query.next())
+            {
+                if (query.value("amount")>amount)//enougn to sell
+                {
+                    //todo:deal with the tables
+                    query.prepare("update GOODS set amount=amount-:amount where goods_id=:goods_id");
+                    query.bindValue(":amount",amount);
+                    query.bindValue(":goods_id",goodsId);
+                    query.exec();
+                    cout<<"in updating goods:"<<query.lastError();
+
+                    query.prepare("delete from SHOPPING_CHARTS where goods_id=:goods_id and customer_id=:customer_id");
+                    query.bindValue(":goods_id",goodsId);
+                    query.bindValue(":customer_id",customerId);
+                    query.exec();
+                    cout<<"in deleting from SHOPPING_CHARTS"<<query.lastError();
+
+
+                }
+                else//not enough to sell
+                {
+                    //todo: alert that not enough to sell
+                }
+            }
+            else//这情况不应该出现
+            {
+                cout<<"cant find such goods";
+            }
+        }
+    }
+    //处理ui
+    updateShoppingCharts();
+    //todo:insert into orders
+    query.prepare("insert into orders(goods_id_list,customer_id,total,timing,address,goods_amount_list,activity_id) values(:goods_id_list,:customer_id,:total,:timing,:address,:goods_amount_list,:activity_id)");
+    cout<<goodsIds<<" "<<customerId<<" "<<sum<<" "<<ui->address->text()<<" "<<goodsAmounts;
+    query.bindValue(":goods_id_list",goodsIds);
+    query.bindValue(":customer_id",customerId);
+    query.bindValue(":total",sum);
+    QDateTime curDateTime=QDateTime::currentDateTime();
+    query.bindValue(":timing",curDateTime);
+    query.bindValue(":address",ui->address->text());
+    query.bindValue(":goods_amount_list",goodsAmounts);
+    //todo:判断可用哪些优惠
+//    query.bindValue(":activity_id",);
+    query.exec();
+    cout<<query.lastError();
+}
