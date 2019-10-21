@@ -49,6 +49,7 @@ private:
     Ui::MyClient *ui;
     QSqlTableModel *goods_model;
     void updateShoppingCharts();
+    int discountId;
 };
 
 #endif // MYCLIENT_H

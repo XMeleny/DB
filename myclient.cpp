@@ -10,7 +10,7 @@ MyClient::MyClient(QWidget *parent) :
     //cout<<customerId;
 
     goods_model=new QSqlTableModel(this);
-
+    discountId=0;
     shoppingWidget=new QWidget;
     shoppingLayout=new QVBoxLayout;
     shoppingWidget->setLayout(shoppingLayout);
@@ -180,17 +180,109 @@ void MyClient::on_Btn_buy_clicked()
 
     cout<<"click the 下单 button"<<endl;
     QSqlQuery query;
+    float sum=0;
+    QString goodsIds,goodsAmounts,id,amt;
     QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
+    QDate curDate=QDate::currentDate();
     for (int i=0;i<checkboxList.length();i++)
     {
         QCheckBox *checkbox=checkboxList.at(i);
         if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
         {
-
             ui->toolBox->setCurrentIndex(3);
+
+            //获得goodsId
+            int goodsId=checkbox->objectName().mid(3).toInt();
+            id=QString::number(goodsId);
+
+            int amount=shoppingWidget->findChild<QLabel*>("amount"+QString::number(goodsId))->text().toInt();
+            amt=QString::number(amount);
+
+
+            float sumMoney=shoppingWidget->findChild<QLabel*>("sumMoney"+QString::number(goodsId))->text().toFloat();
+            sum+=sumMoney;
+            //            cout<<goodsId;
+            //已完成：根据购物车勾选状态获取要购买的商品的goods_id
+            //todo：处理数据库
+            //todo：判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
+            //todo:库存不够，则跳出弹窗，不够库存
+            //todo:check goods's amount
+
+            //            cout<<query.lastError();
+
+            //处理ui
+
+            //判断可用哪些优惠
+            QSqlQuery tempQuery1;
+            tempQuery1.prepare("select * from discounts where start_time<:curDate and :curDate<end_time");
+            tempQuery1.bindValue(":curDate",curDate);
+            tempQuery1.exec();
+            float tempSum=sum;
+            while(tempQuery1.next())
+            {
+                if(tempQuery1.value("kind")=="满100减10")
+                {
+                    if(sum>=100&&tempSum>sum-10)
+                    {
+                        tempSum=sum-10;
+                        discountId=tempQuery1.value("discount_id").toInt();
+                        ui->discount_kind->setText(tempQuery1.value("kind").toString());
+                    }
+                }
+                else if(tempQuery1.value("kind")=="满200减20")
+                {
+                    if(sum>=200&&tempSum>sum-20)
+                    {
+                        tempSum=sum-20;
+                        discountId=tempQuery1.value("discount_id").toInt();
+                        ui->discount_kind->setText(tempQuery1.value("kind").toString());
+                    }
+                }
+                else if(tempQuery1.value("kind")=="满300减30")
+                {
+                    if(sum>=300&&tempSum>sum-30)
+                    {
+                        tempSum=sum-30;
+                        discountId=tempQuery1.value("discount_id").toInt();
+                        ui->discount_kind->setText(tempQuery1.value("kind").toString());
+                    }
+                }
+                else if(tempQuery1.value("kind")=="七折")
+                {
+                    if(tempSum>sum*0.7)
+                    {
+                        tempSum=sum*0.7;
+                        discountId=tempQuery1.value("discount_id").toInt();
+                        ui->discount_kind->setText(tempQuery1.value("kind").toString());
+                    }
+                }
+                else if(tempQuery1.value("kind")=="八折")
+                {
+
+                    if(tempSum>sum*0.8)
+                    {
+                        tempSum=sum*0.8;
+                        discountId=tempQuery1.value("discount_id").toInt();
+                        ui->discount_kind->setText(tempQuery1.value("kind").toString());
+                    }
+                }
+                else if(tempQuery1.value("kind")=="九折")
+                {
+                    if(tempSum>sum*0.9)
+                    {
+                        tempSum=sum*0.9;
+                        discountId=tempQuery1.value("discount_id").toInt();
+                        ui->discount_kind->setText(tempQuery1.value("kind").toString());
+                    }
+
+                }
+            }
+            //    cout<<tempQuery1.lastError();
+            //显示原价、折扣价在确认下单页面
+            ui->original_cost->setText(QString::number(sum));
+            ui->discounted_cost->setText(QString::number(tempSum));
         }
     }
-
 }
 
 void MyClient::updateShoppingCharts()
@@ -505,80 +597,10 @@ void MyClient::on_pushButton_2_clicked()
         }
     }
     //处理ui
+    //购物车更新
     updateShoppingCharts();
-    //todo:insert into orders
 
-    //todo:判断可用哪些优惠
-    QSqlQuery tempQuery1;
-    tempQuery1.prepare("select * from discounts where start_time<:curDate and :curDate<end_time");
-    tempQuery1.bindValue(":curDate",curDate);
-    tempQuery1.exec();
-    float tempSum=sum;
-    int discountId;
-    while(tempQuery1.next())
-    {
-        if(tempQuery1.value("kind")=="满100减10")
-        {
-            if(sum>=100&&tempSum>sum-10)
-            {
-                tempSum=sum-10;
-                discountId=tempQuery1.value("discount_id").toInt();
-                ui->discount_kind->setText(tempQuery1.value("kind").toString());
-            }
-        }
-        else if(tempQuery1.value("kind")=="满200减20")
-        {
-            if(sum>=200&&tempSum>sum-20)
-            {
-                tempSum=sum-20;
-                discountId=tempQuery1.value("discount_id").toInt();
-                ui->discount_kind->setText(tempQuery1.value("kind").toString());
-            }
-        }
-        else if(tempQuery1.value("kind")=="满300减30")
-        {
-            if(sum>=300&&tempSum>sum-30)
-            {
-                tempSum=sum-30;
-                discountId=tempQuery1.value("discount_id").toInt();
-                ui->discount_kind->setText(tempQuery1.value("kind").toString());
-            }
-        }
-        else if(tempQuery1.value("kind")=="七折")
-        {
-            if(tempSum>sum*0.7)
-            {
-                tempSum=sum*0.7;
-                discountId=tempQuery1.value("discount_id").toInt();
-                ui->discount_kind->setText(tempQuery1.value("kind").toString());
-            }
-        }
-        else if(tempQuery1.value("kind")=="八折")
-        {
-
-            if(tempSum>sum*0.8)
-            {
-                tempSum=sum*0.8;
-                discountId=tempQuery1.value("discount_id").toInt();
-                ui->discount_kind->setText(tempQuery1.value("kind").toString());
-            }
-        }
-        else if(tempQuery1.value("kind")=="九折")
-        {
-            if(tempSum>sum*0.9)
-            {
-                tempSum=sum*0.9;
-                discountId=tempQuery1.value("discount_id").toInt();
-                ui->discount_kind->setText(tempQuery1.value("kind").toString());
-            }
-
-        }
-    }
-    //    cout<<tempQuery1.lastError();
-    cout<<tempSum;
-    ui->original_cost->setText(QString::number(sum));
-    ui->discounted_cost->setText(QString::number(tempSum));
-
+    //insert into orders
     query.prepare("insert into orders(goods_id_list,customer_id,total,timing,address,goods_amount_list,activity_id) values(:goods_id_list,:customer_id,:total,:timing,:address,:goods_amount_list,:activity_id)");
     cout<<goodsIds<<" "<<customerId<<" "<<sum<<" "<<ui->address->text()<<" "<<goodsAmounts;
     query.bindValue(":goods_id_list",goodsIds);
@@ -587,9 +609,12 @@ void MyClient::on_pushButton_2_clicked()
     query.bindValue(":timing",curDate);
     query.bindValue(":address",ui->address->text());
     query.bindValue(":goods_amount_list",goodsAmounts);
-    query.bindValue(":total",tempSum);
+    query.bindValue(":total",ui->discounted_cost->text());
     query.bindValue(":activity_id",discountId);
     query.exec();
     cout<<query.lastError();
-
+    ui->address->clear();
+    ui->original_cost->clear();
+    ui->discount_kind->clear();
+    ui->discounted_cost->clear();
 }
