@@ -237,12 +237,22 @@
      </property>
      <item>
       <property name="text">
+       <string>满100减10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>满200减20</string>
       </property>
      </item>
      <item>
       <property name="text">
        <string>满300减30</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>七折</string>
       </property>
      </item>
      <item>
@@ -312,7 +322,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>显示所有商品</string>
+      <string>显示所有优惠</string>
      </property>
     </widget>
    </widget>
