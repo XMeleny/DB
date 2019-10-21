@@ -16,8 +16,8 @@
   <widget class="QToolBox" name="toolBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>10</y>
+     <x>30</x>
+     <y>20</y>
      <width>751</width>
      <height>431</height>
     </rect>
@@ -527,6 +527,14 @@
     </widget>
    </widget>
    <widget class="QWidget" name="page_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>751</width>
+      <height>327</height>
+     </rect>
+    </property>
     <attribute name="label">
      <string>下单</string>
     </attribute>
@@ -556,14 +564,110 @@
     <widget class="QPushButton" name="pushButton_2">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>150</y>
+       <x>150</x>
+       <y>290</y>
        <width>75</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
       <string>确定下单</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>90</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>原价：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="original_cost">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>90</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>150</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>使用的优惠：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="discount_kind">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>150</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_23">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>230</y>
+       <width>54</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>折扣价：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="discounted_cost">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>230</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>

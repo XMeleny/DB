@@ -237,12 +237,22 @@
      </property>
      <item>
       <property name="text">
+       <string>满100减10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>满200减20</string>
       </property>
      </item>
      <item>
       <property name="text">
        <string>满300减30</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>七折</string>
       </property>
      </item>
      <item>

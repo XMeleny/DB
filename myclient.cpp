@@ -187,9 +187,9 @@ void MyClient::on_Btn_buy_clicked()
         if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
         {
 
-    ui->toolBox->setCurrentIndex(3);
-    }
+            ui->toolBox->setCurrentIndex(3);
         }
+    }
 
 }
 
@@ -353,17 +353,17 @@ void MyClient::on_tableView_clicked(const QModelIndex &index)
 
     cout<<"in on_tableView_click())  index:"<<index<<endl;
     //    onTableSelectChange(1);
-//    goods_model->setTable("GOODS");
-//    goods_model->select();
-//    QSqlRecord record=goods_model->record(index.row());
-//    ui->name->setText(record.value("goods_name").toString());
-//    ui->price->setText(record.value("price").toString());
-//    ui->spinBox->setValue(1);
-//    ui->comboBox->setCurrentText(record.value("kind").toString());
-//    ui->stock->setText(record.value("amount").toString());
-//    ui->sum->setText("0");
-//    ui->id->setText(record.value("goods_id").toString());
-//
+    //    goods_model->setTable("GOODS");
+    //    goods_model->select();
+    //    QSqlRecord record=goods_model->record(index.row());
+    //    ui->name->setText(record.value("goods_name").toString());
+    //    ui->price->setText(record.value("price").toString());
+    //    ui->spinBox->setValue(1);
+    //    ui->comboBox->setCurrentText(record.value("kind").toString());
+    //    ui->stock->setText(record.value("amount").toString());
+    //    ui->sum->setText("0");
+    //    ui->id->setText(record.value("goods_id").toString());
+    //
 
     int r;
     r=ui->tableView->currentIndex().row();
@@ -396,9 +396,9 @@ void MyClient::on_tableView_clicked(const QModelIndex &index)
     query.exec(QString("select kind from GOODS where goods_id='%1'").arg(ui->id->text()));
     query.next();
     ui->comboBox->setCurrentText(query.value(0).toString());
-//    QSqlQuery query; //类别
-//    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
-//    query.next();
+    //    QSqlQuery query; //类别
+    //    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
+    //    query.next();
     //ui->kind->setCurrentText(query.value(0).toString());
 
     goods_model->setTable("GOODS");
@@ -445,6 +445,7 @@ void MyClient::on_pushButton_2_clicked()
     float sum=0;
     QString goodsIds,goodsAmounts,id,amt;
     QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
+    QDate curDate=QDate::currentDate();
     for (int i=0;i<checkboxList.length();i++)
     {
         QCheckBox *checkbox=checkboxList.at(i);
@@ -463,7 +464,7 @@ void MyClient::on_pushButton_2_clicked()
 
             float sumMoney=shoppingWidget->findChild<QLabel*>("sumMoney"+QString::number(goodsId))->text().toFloat();
             sum+=sumMoney;
-//            cout<<goodsId;
+            //            cout<<goodsId;
             //已完成：根据购物车勾选状态获取要购买的商品的goods_id
             //todo：处理数据库
             //todo：判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
@@ -472,7 +473,7 @@ void MyClient::on_pushButton_2_clicked()
             query.prepare("select amount from GOODS where goods_id=:goods_id");
             query.bindValue(":goods_id",goodsId);
             query.exec();
-//            cout<<query.lastError();
+            //            cout<<query.lastError();
             if (query.next())
             {
                 if (query.value("amount")>amount)//enougn to sell
@@ -506,17 +507,89 @@ void MyClient::on_pushButton_2_clicked()
     //处理ui
     updateShoppingCharts();
     //todo:insert into orders
+
+    //todo:判断可用哪些优惠
+    QSqlQuery tempQuery1;
+    tempQuery1.prepare("select * from discounts where start_time<:curDate and :curDate<end_time");
+    tempQuery1.bindValue(":curDate",curDate);
+    tempQuery1.exec();
+    float tempSum=sum;
+    int discountId;
+    while(tempQuery1.next())
+    {
+        if(tempQuery1.value("kind")=="满100减10")
+        {
+            if(sum>=100&&tempSum>sum-10)
+            {
+                tempSum=sum-10;
+                discountId=tempQuery1.value("discount_id").toInt();
+                ui->discount_kind->setText(tempQuery1.value("kind").toString());
+            }
+        }
+        else if(tempQuery1.value("kind")=="满200减20")
+        {
+            if(sum>=200&&tempSum>sum-20)
+            {
+                tempSum=sum-20;
+                discountId=tempQuery1.value("discount_id").toInt();
+                ui->discount_kind->setText(tempQuery1.value("kind").toString());
+            }
+        }
+        else if(tempQuery1.value("kind")=="满300减30")
+        {
+            if(sum>=300&&tempSum>sum-30)
+            {
+                tempSum=sum-30;
+                discountId=tempQuery1.value("discount_id").toInt();
+                ui->discount_kind->setText(tempQuery1.value("kind").toString());
+            }
+        }
+        else if(tempQuery1.value("kind")=="七折")
+        {
+            if(tempSum>sum*0.7)
+            {
+                tempSum=sum*0.7;
+                discountId=tempQuery1.value("discount_id").toInt();
+                ui->discount_kind->setText(tempQuery1.value("kind").toString());
+            }
+        }
+        else if(tempQuery1.value("kind")=="八折")
+        {
+
+            if(tempSum>sum*0.8)
+            {
+                tempSum=sum*0.8;
+                discountId=tempQuery1.value("discount_id").toInt();
+                ui->discount_kind->setText(tempQuery1.value("kind").toString());
+            }
+        }
+        else if(tempQuery1.value("kind")=="九折")
+        {
+            if(tempSum>sum*0.9)
+            {
+                tempSum=sum*0.9;
+                discountId=tempQuery1.value("discount_id").toInt();
+                ui->discount_kind->setText(tempQuery1.value("kind").toString());
+            }
+
+        }
+    }
+    //    cout<<tempQuery1.lastError();
+    cout<<tempSum;
+    ui->original_cost->setText(QString::number(sum));
+    ui->discounted_cost->setText(QString::number(tempSum));
+
     query.prepare("insert into orders(goods_id_list,customer_id,total,timing,address,goods_amount_list,activity_id) values(:goods_id_list,:customer_id,:total,:timing,:address,:goods_amount_list,:activity_id)");
     cout<<goodsIds<<" "<<customerId<<" "<<sum<<" "<<ui->address->text()<<" "<<goodsAmounts;
     query.bindValue(":goods_id_list",goodsIds);
     query.bindValue(":customer_id",customerId);
-    query.bindValue(":total",sum);
-    QDateTime curDateTime=QDateTime::currentDateTime();
-    query.bindValue(":timing",curDateTime);
+
+    query.bindValue(":timing",curDate);
     query.bindValue(":address",ui->address->text());
     query.bindValue(":goods_amount_list",goodsAmounts);
-    //todo:判断可用哪些优惠
-//    query.bindValue(":activity_id",);
+    query.bindValue(":total",tempSum);
+    query.bindValue(":activity_id",discountId);
     query.exec();
     cout<<query.lastError();
+
 }
