@@ -12,13 +12,14 @@
 #include"QPushButton"
 #include<QLineEdit>
 #include <QTextCodec>
-
+#include<QSqlDriver>
 #include<QtSql/QSqlQueryModel>
 #include<QtSql/QSqlTableModel>
 #include<QString>
 #include<QSqlTableModel>
 #include <QCompleter>
 #include<QSqlError>
+#include <windows.h>
 
 #include<QVariant>
 

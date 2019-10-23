@@ -5,7 +5,6 @@ static bool createConnection()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
 
-
 //    db.setHostName("116.56.158.101");//todo
 //    db.setPort(3306);
     db.setDatabaseName("test");    //使用哪个数据库
@@ -23,6 +22,11 @@ static bool createConnection()
         cout<<db.lastError();
         return true;
     }
+//    if(db.driver()->hasFeature(QSqlDriver::Transactions))
+//        { //先判断该数据库是否支持事务操作
+//            cout<<"yes";
+//        }
+//    else cout<<"no";
 
 }
 #endif // CONNECTION_H

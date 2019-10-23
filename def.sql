@@ -20,7 +20,7 @@ money float(10,2) unsigned
 --  外键要先定义，再标记
 /* create table ORDERS
 (
-order_id smallint unsigned,
+order_id smallint unsigned auto_increment,
 goods_id smallint unsigned,
 customer_id char(11),
 foreign key(customer_id) references CUSTOMERS(customer_id),
@@ -37,7 +37,7 @@ order_id smallint unsigned,
 goods_id_list varchar(100),
 customer_id char(11),
 goods_amount_list varchar(100),
-totoal float,
+total float,
 timing date,
 address varchar(100),
 activity_id smallint,
