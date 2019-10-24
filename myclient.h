@@ -45,6 +45,8 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_Btn_delete_clicked();
+
 private:
     Ui::MyClient *ui;
     QSqlTableModel *goods_model;

@@ -173,7 +173,6 @@ int MyClient::showGoodsAmount(int goodsId)
 //提取勾选的货物 下单按钮
 void MyClient::on_Btn_buy_clicked()
 {
-
     cout<<"click the 下单 button"<<endl;
     QSqlQuery query;
     float sum=0;
@@ -318,15 +317,12 @@ void MyClient::updateShoppingCharts()
     {
         //get goods_id
         int tempGoodsId=query.value("goods_id").toInt();
-        //get goods_name
-//        QSqlQuery temp;
-
 
         QSqlQuery temp;
         temp.prepare("select * from goods where goods_id=:goods_id");
         temp.bindValue(":goods_id",tempGoodsId);
         temp.exec();
-
+        //get goods_name ,price
         QString tempGoodsName;
         float tempGoodsSum;
         if (temp.next())
@@ -722,3 +718,28 @@ void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
 //    goods_model->select();
 //    ui->tableView->setModel(goods_model);
 //}
+
+void MyClient::on_Btn_delete_clicked()
+{
+    cout<<"click the delete button"<<endl;
+    QSqlQuery query;
+
+    QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
+    int goodsId=0;
+
+    for (int i=0;i<checkboxList.length();i++)
+    {
+        QCheckBox *checkbox=checkboxList.at(i);
+        if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
+        {
+            goodsId=checkbox->objectName().mid(3).toInt();
+            query.prepare("delete from SHOPPING_CHARTS where goods_id=:goods_id and customer_id=:customer_id");
+            query.bindValue(":goods_id",goodsId);
+            query.bindValue(":customer_id",customerId);
+            query.exec();
+            cout<<"in delete from shopping_charts: "<<query.lastError();
+        }
+    }
+
+    updateShoppingCharts();
+}
