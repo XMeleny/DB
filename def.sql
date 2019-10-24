@@ -61,7 +61,6 @@ goods_id smallint unsigned,
 customer_id char(11),
 foreign key (goods_id) references GOODS(goods_id),
 foreign key (customer_id) references CUSTOMERS(customer_id),
-money float,
 amount smallint,
 primary key(customer_id,goods_id)
 );
