@@ -311,7 +311,7 @@ void MyClient::updateShoppingCharts()
     query.prepare("select * from shopping_charts where customer_id=:customer_id");
     query.bindValue(":customer_id",customerId);
     query.exec();
-    cout<<query.lastError();
+//    cout<<query.lastError();
 
     while(query.next())
     {
@@ -737,7 +737,7 @@ void MyClient::on_Btn_delete_clicked()
             query.bindValue(":goods_id",goodsId);
             query.bindValue(":customer_id",customerId);
             query.exec();
-            cout<<"in delete from shopping_charts: "<<query.lastError();
+//            cout<<"in delete from shopping_charts: "<<query.lastError();
         }
     }
 

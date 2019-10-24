@@ -14,12 +14,12 @@ static bool createConnection()
     if(!db.open())
     {
         cout<<"linking database error!!!";
+        cout<<db.lastError();
         return false;
     }
     else
     {
         cout<<"linking database success!!!";
-        cout<<db.lastError();
         return true;
     }
 //    if(db.driver()->hasFeature(QSqlDriver::Transactions))
