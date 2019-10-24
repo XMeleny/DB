@@ -120,33 +120,26 @@ void MyClient::on_addShoppingCart_clicked()
     if (query.next())//存在，update
     {
         //更新数据库
-        query.prepare("update shopping_charts set amount=amount+?, money=money+? "
-                      "where goods_id=? and customer_id=?");
-        query.addBindValue(tempAmount);
-        query.addBindValue(tempPrice);
-        query.addBindValue(tempGoodsId);
-        query.addBindValue(customerId);
+        query.prepare("update shopping_charts set amount=amount+:amount "
+                      "where goods_id=:goods_id and customer_id=:customer_id");
+        query.bindValue(":amount",tempAmount);
+        query.bindValue(":goods_id",tempGoodsId);
+        query.bindValue(":customer_id",customerId);
         query.exec();
-        cout<<query.lastError();
-
-        //更新购物车
-        updateShoppingCharts();
     }
     else//不在，insert
     {
         //更新数据库
-        query.prepare("insert into shopping_charts (goods_id,customer_id,money,amount) "
-                      "values (?,?,?,?)");
+        query.prepare("insert into shopping_charts (goods_id,customer_id,amount) "
+                      "values (?,?,?)");
         query.addBindValue(tempGoodsId);
         query.addBindValue(customerId);
-        query.addBindValue(ui->sum->text());
         query.addBindValue(tempAmount);
         query.exec();
-        cout<<query.lastError();
-
-        //更新购物车
-        updateShoppingCharts();
+        cout<<"in add shopping_chart"<<query.lastError();
     }
+    //更新购物车
+    updateShoppingCharts();
 
 }
 
@@ -295,7 +288,7 @@ void MyClient::updateShoppingCharts()
 {
     cout<<"in update shoppingCharts";
 
-    //warning:it would find all widgets includes checkbox and
+    //warning:it would find all widgets includes checkboxes and labels
     QList<QWidget*> widgetList=shoppingWidget->findChildren<QWidget*>();
 
     //delete all
@@ -325,11 +318,14 @@ void MyClient::updateShoppingCharts()
         //get goods_name ,price
         QString tempGoodsName;
         float tempGoodsSum;
+        int tempGoodsAmount;
+        float tempGoodsPrice;
         if (temp.next())
         {
             tempGoodsName=temp.value("goods_name").toString();
-            float price=temp.value("price").toFloat();
-            tempGoodsSum=price*query.value("amount").toFloat();
+            tempGoodsPrice=temp.value("price").toFloat();
+            tempGoodsSum=tempGoodsPrice*query.value("amount").toFloat();
+            tempGoodsAmount=temp.value("amount").toInt();
         }
 
         QString sum=QString("%1").arg(tempGoodsSum);
@@ -340,7 +336,11 @@ void MyClient::updateShoppingCharts()
         QHBoxLayout *hLayout=new QHBoxLayout;
         QCheckBox *buy=new QCheckBox("");
         QLabel *goodsName=new QLabel(tempGoodsName);
-        QLabel *amount= new QLabel(query.value("amount").toString());
+//        QLabel *amount= new QLabel(query.value("amount").toString());
+        QSpinBox *amount=new QSpinBox();
+        amount->setValue(query.value("amount").toInt());
+        amount->setMinimum(1);
+        amount->setMaximum(tempGoodsAmount);
         QLabel *sumMoney=new QLabel(sum);
 
         //判断可不可打钩
@@ -354,8 +354,14 @@ void MyClient::updateShoppingCharts()
 
         }
 
-        //set the object's name, making it possible to select and buy
+//        connect(amount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+//                [=](int value)
+//        {
+//            qDebug() << "Value : "  << value;
+//            qDebug() << "Text : "  << amount->text();
+//        });
 
+        //set the object's name, making it possible to select and buy
         record->setObjectName("record"+QString::number(tempGoodsId));
         buy->setObjectName("buy"+QString::number(tempGoodsId));
         goodsName->setObjectName("goodsName"+QString::number(tempGoodsId));
