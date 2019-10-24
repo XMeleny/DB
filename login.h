@@ -22,6 +22,10 @@ private slots:
 
     void on_register_2_clicked();
 
+    //void on_pushButton_clicked();
+
+    //void on_pushButton_clicked();
+
 private:
     Ui::LogIn *ui;
 };
