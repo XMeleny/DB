@@ -354,12 +354,23 @@ void MyClient::updateShoppingCharts()
 
         }
 
-//        connect(amount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-//                [=](int value)
-//        {
-//            qDebug() << "Value : "  << value;
-//            qDebug() << "Text : "  << amount->text();
-//        });
+        //当amount的spinbox发生改变时
+        connect(amount, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+                [=](int value)
+        {
+            //temp不能使用外部变量，而要重新定义，但tempGoodsId这些又可以使用
+            QSqlQuery temp;
+            temp.prepare("update SHOPPING_CHARTS set amount=:amount "
+                         "where goods_id=:goods_id and customer_id=:customer_id");
+            temp.bindValue(":amount",value);
+            temp.bindValue(":goods_id",tempGoodsId);
+            temp.bindValue(":customer_id",customerId);
+            temp.exec();
+            cout<<temp.lastQuery();
+            cout<<"in spinbox change: "<<temp.lastError();
+
+            sumMoney->setText(QString::number(value*tempGoodsPrice));
+        });
 
         //set the object's name, making it possible to select and buy
         record->setObjectName("record"+QString::number(tempGoodsId));
@@ -490,8 +501,6 @@ void MyClient::on_pushButton_2_clicked()
                     lackGoodsId[cur] = goodsId;
                     cur++;
                     cout<<"not enough to sell";
-
-
                     continue;
                 }
             }
@@ -509,9 +518,6 @@ void MyClient::on_pushButton_2_clicked()
         cout<<"rollback";
 
         //TODO:把数组 lackGoodsId 中的库存不足商品id显示出来 用弹窗？
-
-
-
         delete []lackGoodsId;
         return;
     }
