@@ -1,23 +1,13 @@
 # DB 
 
-为了只用一个远程仓库，使用方法如下：
-
-首先选择你最喜欢的路径
-
-//这一句我不知道有没有用，如果大家看到git remote -v不是连接XMeleny的话就用这一句话
-git remote add origin https://github.com/XMeleny/DB
-
+1.
+在你的projects文件夹里面右键，选择git bash here
 git clone https://github.com/XMeleny/DB
-
-//do you job
-
-git add .
-
-git commit -m"."
-
-git push origin develop//注意是develop！不是master！
-
-大家提交的都在github的Dev上面，我每天或者有空就merge dev到master。
-开工干活就pull master，
-完成了一个小功能就commit一下，
-一天不想干了就push上dev去。
+完成初始化
+2.
+日常工作
+(1) git pull origin master
+(2) do your job
+(3) git add .
+(4) git commit -m"say something here"
+(5) git push origin master
