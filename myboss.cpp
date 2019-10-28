@@ -41,8 +41,24 @@ void MyBoss::on_weeklyBill_clicked()
     QDate date(QDate::currentDate());
     QDate target = date.addDays(-6);
     qDebug()<<target;
-        QString buffer1 = QString("%1-%2-%3").arg(date.year()).arg(date.month()).arg(date.day());
-        QString buffer2 = QString("%1-%2-%3").arg(target.year()).arg(target.month()).arg(target.day());
+    int day1 =date.day();
+    int day2 = date.day();
+    QString buffer1,buffer2;
+    if(day1<10)
+    {
+    buffer1 = QString("%1-%2-0%3").arg(date.year()).arg(date.month()).arg(date.day());
+    }
+    else{
+
+        buffer1 = QString("%1-%2-%3").arg(date.year()).arg(date.month()).arg(date.day());
+    }
+    if(day2<10)
+    {
+    buffer2 = QString("%1-%2-0%3").arg(target.year()).arg(target.month()).arg(target.day());
+    }
+    else{
+        buffer2 = QString("%1-%2-%3").arg(target.year()).arg(target.month()).arg(target.day());
+    }
         orders_model->setTable("ORDERS");
         orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<='%2'").arg(buffer2).arg(buffer1));
         orders_model->select();
