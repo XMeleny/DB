@@ -38,9 +38,11 @@ private slots:
 
     void on_kind_currentTextChanged(const QString &arg1);
 
+
 private:
     Ui::MyBoss *ui;
     QSqlTableModel *discount_model;
+     QSqlTableModel *orders_model;
 };
 
 #endif // MYBOSS_H

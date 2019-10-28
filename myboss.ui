@@ -29,7 +29,7 @@
   <widget class="QToolBox" name="toolBox">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>50</x>
      <y>60</y>
      <width>631</width>
      <height>361</height>
@@ -41,7 +41,7 @@
       <x>0</x>
       <y>0</y>
       <width>631</width>
-      <height>309</height>
+      <height>319</height>
      </rect>
     </property>
     <attribute name="label">
@@ -50,9 +50,9 @@
     <widget class="QPushButton" name="weeklyBill">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>0</x>
        <y>30</y>
-       <width>75</width>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -63,9 +63,9 @@
     <widget class="QPushButton" name="monthlyBill">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>0</x>
        <y>70</y>
-       <width>75</width>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -76,9 +76,9 @@
     <widget class="QPushButton" name="yearBill">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>110</y>
-       <width>75</width>
+       <x>0</x>
+       <y>160</y>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -86,13 +86,92 @@
       <string>年结账单</string>
      </property>
     </widget>
-    <widget class="QListWidget" name="listWidget">
+    <widget class="QComboBox" name="comboBox">
      <property name="geometry">
       <rect>
-       <x>180</x>
-       <y>20</y>
-       <width>351</width>
-       <height>261</height>
+       <x>0</x>
+       <y>100</y>
+       <width>81</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_2">
+     <property name="geometry">
+      <rect>
+       <x>1</x>
+       <y>130</y>
+       <width>81</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_3">
+     <property name="geometry">
+      <rect>
+       <x>1</x>
+       <y>190</y>
+       <width>81</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>99</y>
+       <width>41</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>年</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>129</y>
+       <width>41</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>月</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>189</y>
+       <width>41</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>年</string>
+     </property>
+    </widget>
+    <widget class="QTableView" name="tableView_2">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>0</y>
+       <width>391</width>
+       <height>201</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>199</y>
+       <width>391</width>
+       <height>31</height>
       </rect>
      </property>
     </widget>
@@ -103,7 +182,7 @@
       <x>0</x>
       <y>0</y>
       <width>631</width>
-      <height>309</height>
+      <height>319</height>
      </rect>
     </property>
     <attribute name="label">

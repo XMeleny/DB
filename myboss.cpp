@@ -2,7 +2,8 @@
 #include "ui_myboss.h"
 #include"login.h"
 #include"connection.h"
-
+#include<QDate>
+#include <QStandardItem>
 
 MyBoss::MyBoss(QWidget *parent) :
     QDialog(parent),
@@ -10,6 +11,9 @@ MyBoss::MyBoss(QWidget *parent) :
 {
     ui->setupUi(this);
     discount_model=new QSqlTableModel;
+    connect(ui->comboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
+    connect(ui->comboBox_2,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
+    connect(ui->comboBox_3,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
     initMyStaff();
 }
 
@@ -29,17 +33,123 @@ void MyBoss::on_loginAgain_clicked()
 //周结账单
 void MyBoss::on_weeklyBill_clicked()
 {
+    orders_model=new QSqlTableModel;
+    QString strings;
+    QSqlQuery query;
+    float sum=0;
+    ui->toolBox->setCurrentIndex(0);
+    QDate date(QDate::currentDate());
+    QDate target = date.addDays(-6);
+    qDebug()<<target;
+        QString buffer1 = QString("%1-%2-%3").arg(date.year()).arg(date.month()).arg(date.day());
+        QString buffer2 = QString("%1-%2-%3").arg(target.year()).arg(target.month()).arg(target.day());
+        orders_model->setTable("ORDERS");
+        orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<='%2'").arg(buffer2).arg(buffer1));
+        orders_model->select();
+        ui->tableView_2->setModel(orders_model);
+    int month = date.month();
+    int day = date.day();
+    query.prepare("select * from orders where MONTH(timing)=:month and DAY(timing)=:day");
+       query.bindValue(":month",month);
+       query.bindValue(":day",day);
+       sum=sum+query.value(3).toInt()*query.value(4).toFloat();
+       qDebug()<<sum;
+       query.exec();
+       query.next();
+       while (query.next())
+      {
+          sum=sum+query.value(4).toFloat();
+          qDebug()<<query.value(4);
+      }
+       for(int i=1;i<=6;i++)
+        {
 
+                target = date.addDays(-i);
+
+                qDebug()<<target;
+                month = target.month();
+                day   = target.day();
+                query.prepare("select * from orders where MONTH(timing)=:month and DAY(timing)=:day");
+                query.bindValue(":month",month);
+                query.bindValue(":day",day);
+                query.exec();
+                while (query.next())
+                  {
+
+                       sum=sum+query.value(4).toFloat();
+                        }
+
+                   }
+           QString extra = QString("%1").arg(sum);
+          QString str = "sum"+extra ;
+//          strings="hello";
+          strings = strings.sprintf("%.2f",sum);
+           ui->lineEdit->setText(strings);
+           qDebug()<<"sum:"<<sum;
 }
 //月结账单
 void MyBoss::on_monthlyBill_clicked()
 {
+    orders_model=new QSqlTableModel;
+    QComboBox *comboBox = ui->comboBox;
+    QComboBox *comboBox_2 = ui->comboBox_2;
+    QString year = comboBox->currentText();
+    QString month = comboBox_2->currentText();
+    qDebug()<<year<<month;
+    QString begin = year +"-"+ month+"-" +"01";
+    int m = month.toInt();
+    int next = m+1;
+    QDate date = QDate::fromString(begin,"yyyy/M/d");
+    QString month2 = QString::number(next,10);
+    QString end = year +"-"+ month2 +"-"+"01";
+    qDebug()<<begin<<end;
+    orders_model->setTable("ORDERS");
+    orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<'%2'").arg(begin).arg(end));
+    orders_model->select();
+    ui->tableView_2->setModel(orders_model);
+     QSqlQuery query;
+     query.prepare("select * from orders where YEAR(timing)=:year and MONTH(timing)=:month");
+     query.bindValue(":month",month);
+     query.bindValue(":year",year);
+     query.exec();
+     float sum=0;
+     while(query.next())
+     {
 
+         sum=sum+query.value(4).toFloat();
+     }
+     qDebug()<<sum;
+     QString strings;
+     strings = strings.sprintf("%.2f",sum);
+      ui->lineEdit->setText(strings);
+      qDebug()<<"sum:"<<sum;
 }
 //年结账单
 void MyBoss::on_yearBill_clicked()
 {
+    orders_model=new QSqlTableModel;
+    QComboBox *comboBox_3 = ui->comboBox_3;
+    QString year = comboBox_3->currentText();
+    QString begin = year +"-"+"1"+"-"+"01";
+    QString end =year +"-"+"12"+"-"+"31";
+    orders_model->setTable("ORDERS");
+    orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<'%2'").arg(begin).arg(end));
+    orders_model->select();
+     ui->tableView_2->setModel(orders_model);
+     QSqlQuery query;
+     query.prepare("select * from orders where YEAR(timing)=:year");
+     query.bindValue(":year",year);
+     query.exec();
+     float sum=0;
+     while(query.next())
+     {
 
+         sum=sum+query.value(4).toFloat();
+     }
+     qDebug()<<sum;
+     QString strings;
+     strings = strings.sprintf("%.2f",sum);
+      ui->lineEdit->setText(strings);
 }
 
 void MyBoss::on_addDiscount_clicked()
@@ -94,6 +204,18 @@ void MyBoss::initMyStaff()
     //    if(createConnection())
     //    {
     QStringList strings;
+
+    //显示账单的界面
+    ui->toolBox->setCurrentIndex(0);
+    QStringList month;
+         month << "1" << "2" << "3" << "4" << "5"<<"6"<<"7"<<"8"<<"9"<<"10"<<"11"<<"12";
+     ui->comboBox_2->addItems(month);
+     QStringList year;
+      year<<"2017"<<"2018"<<"2019";
+      ui->comboBox->addItems(year);
+      QStringList year_2;
+      year_2<<"2017"<<"2018"<<"2019";
+      ui->comboBox_3->addItems(year_2);
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
