@@ -15,7 +15,7 @@ MyClient::MyClient(QWidget *parent) :
     shoppingWidget=new QWidget;
     shoppingLayout=new QVBoxLayout;
     shoppingWidget->setLayout(shoppingLayout);
-    ui->verticalLayout_3->addWidget(shoppingWidget);
+    ui->verticalLayout_4->addWidget(shoppingWidget);
 
     //initMyClient();
 }
@@ -184,7 +184,7 @@ void MyClient::on_Btn_buy_clicked()
             id=QString::number(goodsId);
 
             //顾客要买的数量
-            int amount=shoppingWidget->findChild<QLabel*>("amount"+QString::number(goodsId))->text().toInt();
+            int amount=shoppingWidget->findChild<QSpinBox*>("amount"+QString::number(goodsId))->text().toInt();
             amt=QString::number(amount);
 
 
@@ -420,6 +420,7 @@ void MyClient::on_pushButton_2_clicked()
     }
     else
     {
+        //bug: 如果未曾充值，money是不是初始化为0？
         //一般情况下不会出现
         cout<<"error";
         return;
@@ -440,6 +441,7 @@ void MyClient::on_pushButton_2_clicked()
 
     for (int i=0;i<checkboxList.length();i++)
     {
+        cout<<"in process juding stock";
         QCheckBox *checkbox=checkboxList.at(i);
         if (checkbox->checkState())//被选中，此时objecName为buy+goodsId
         {
@@ -448,7 +450,7 @@ void MyClient::on_pushButton_2_clicked()
             id=QString::number(goodsId);
             //订单中所有商品的id
             goodsIds=goodsIds+" "+id;
-            int amount=shoppingWidget->findChild<QLabel*>("amount"+QString::number(goodsId))->text().toInt();
+            int amount=shoppingWidget->findChild<QSpinBox*>("amount"+QString::number(goodsId))->text().toInt();
             amt=QString::number(amount);
             //订单中所有商品id对应的数量
             goodsAmounts=goodsAmounts+" "+amt;
@@ -510,6 +512,7 @@ void MyClient::on_pushButton_2_clicked()
             }
         }
     }
+    cout<<"successfully judge stock";
 
     if (pay == false)
     {
@@ -574,35 +577,47 @@ void MyClient::on_pushButton_2_clicked()
 void MyClient::on_charge_clicked()
 {
     float rechargeMoney = ui->ChargeMoney->text().toFloat();
+    float remainingMoney=ui->remaining->text().toFloat();
 
+    //更新顾客数据库
     QSqlQuery query;
-    query.prepare("select * from CUSTOMERS where customer_id = ?");
-    query.addBindValue(customerId);
+    query.prepare("update CUSTOMER set money=:money where customer_id=:customer_id");
+    query.bindValue(":money",rechargeMoney+remainingMoney);
+    query.bindValue(":customer_id",customerId);
     query.exec();
 
-    if (query.next())
-    {
-        float currentMoney = query.value(3).toFloat();
-        query.prepare("update CUSTOMERS set money = ? where customer_id = ?");
-        query.addBindValue(rechargeMoney+currentMoney);
-        query.addBindValue(customerId);
-        query.exec();
-        //TODO:弹窗显示充值成功？
-        cout<<"充值成功!";
+    //修改ui
+    ui->ChargeMoney->clear();
+    ui->remaining->setText(QString::number(rechargeMoney+remainingMoney));
 
-        //充值完 更新当前余额
-        query.prepare("select money from CUSTOMERS where customer_id = ?");
-        query.addBindValue(customerId);
-        query.exec();
-        query.next();
-        //float remaining = query.value(0).toFloat();
-        QString remaining = QString("%1").arg(query.value(0).toFloat());
-        ui->remaining->setText(remaining);
+//    QSqlQuery query;
+//    query.prepare("select * from CUSTOMERS where customer_id = ?");
+//    query.addBindValue(customerId);
+//    query.exec();
 
-        //TODO:把刚刚输入框内的数字删掉
-    }
-    else//一般不会出现的情况
-        cout<<"出错";
+//    if (query.next())
+//    {
+//        float currentMoney = query.value(3).toFloat();
+//        query.prepare("update CUSTOMERS set money = ? where customer_id = ?");
+//        query.addBindValue(rechargeMoney+currentMoney);
+//        query.addBindValue(customerId);
+//        query.exec();
+//        //TODO:弹窗显示充值成功？
+//        cout<<"充值成功!";
+
+//        //充值完 更新当前余额
+//        query.prepare("select money from CUSTOMERS where customer_id = ?");
+//        query.addBindValue(customerId);
+//        query.exec();
+//        query.next();
+//        //float remaining = query.value(0).toFloat();
+//        QString remaining = QString("%1").arg(query.value(0).toFloat());
+//        ui->remaining->setText(remaining);
+
+//        //TODO:把刚刚输入框内的数字删掉
+//    }
+//    else//一般不会出现的情况
+//        cout<<"出错";
 }
 
 //初始化
