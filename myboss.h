@@ -42,7 +42,8 @@ private slots:
 private:
     Ui::MyBoss *ui;
     QSqlTableModel *discount_model;
-     QSqlTableModel *orders_model;
+    QSqlTableModel *orders_model;
+    int k;
 };
 
 #endif // MYBOSS_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>333</width>
+    <height>186</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -25,7 +25,7 @@
      <x>64</x>
      <y>45</y>
      <width>191</width>
-     <height>25</height>
+     <height>29</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -58,7 +58,7 @@
      <x>64</x>
      <y>71</y>
      <width>191</width>
-     <height>25</height>
+     <height>29</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">

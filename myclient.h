@@ -52,6 +52,8 @@ private:
     QSqlTableModel *goods_model;
     void updateShoppingCharts();
     int discountId;
+    int count;
+    int maxcount;
 };
 
 #endif // MYCLIENT_H
