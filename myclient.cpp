@@ -1,4 +1,4 @@
-﻿#include "myclient.h"
+#include "myclient.h"
 #include "ui_myclient.h"
 #include"login.h"
 #include"connection.h"
@@ -14,11 +14,10 @@ MyClient::MyClient(QWidget *parent) :
     count=0;
     goods_model=new QSqlTableModel(this);
     discountId=0;
-//    shoppingWidget=new QWidget;
-    shoppingWidget=ui->scrollArea;
+    shoppingWidget=new QWidget;
     shoppingLayout=new QVBoxLayout;
     shoppingWidget->setLayout(shoppingLayout);
-//    ui->verticalLayout_4->addWidget(shoppingWidget);
+    ui->verticalLayout_8->addWidget(shoppingWidget);
 
     //initMyClient();
 }
@@ -67,7 +66,7 @@ void MyClient::initMyClient()
     goods_model->select();
     ui->tableView->setModel(goods_model);
     ui->tableView->setColumnHidden(0,true);
-     ui->tableView->setColumnHidden(3,true);
+    ui->tableView->setColumnHidden(3,true);
     //显示顾客当前余额
     query.prepare("select money from CUSTOMERS where customer_id = ?");
     query.addBindValue(customerId);
@@ -134,11 +133,11 @@ void MyClient::on_addShoppingCart_clicked()
     }
     else//不在，insert
     {
-//        if(count>maxcount)
-//        {
-//                QMessageBox::warning(this,tr("error!!!"),tr("your shopping chart is full"),QMessageBox::Yes);
-//                return;
-//    }
+        //        if(count>maxcount)
+        //        {
+        //                QMessageBox::warning(this,tr("error!!!"),tr("your shopping chart is full"),QMessageBox::Yes);
+        //                return;
+        //    }
         query.prepare("select count(goods_id) from shopping_charts "
                       "where customer_id =:customer_id");
         query.bindValue(":customer_id",customerId);
@@ -316,7 +315,7 @@ void MyClient::updateShoppingCharts()
 
     //warning:it would find all widgets includes checkboxes and labels
     QList<QWidget*> widgetList=shoppingWidget->findChildren<QWidget*>();
-//    QList<QWidget*> widgetList=ui->scrollArea->findChildren<QWidget*>();
+    //    QList<QWidget*> widgetList=ui->scrollArea->findChildren<QWidget*>();
 
     //delete all
     for(int i=0;i<widgetList.length();i++)
@@ -672,7 +671,7 @@ void MyClient::on_charge_clicked()
 //初始化
 void MyClient::on_pushButton_clicked()
 {
-    ui->comboBox->setCurrentText("全部");
+    ui->comboBox->setCurrentText("all");
     goods_model->setTable("GOODS");
     goods_model->select();
     ui->tableView->setModel(goods_model);
@@ -715,49 +714,49 @@ void MyClient::on_tableView_clicked(const QModelIndex &index)
     //    ui->id->setText(record.value("goods_id").toString());
     //
 
-//    int r;
-//    r=ui->tableView->currentIndex().row();
-//    //QModelIndex index;
+    //    int r;
+    //    r=ui->tableView->currentIndex().row();
+    //    //QModelIndex index;
 
-//    QModelIndex currentIndex;
-//    goods_model->setTable("GOODS");
-//    if(ui->comboBox->currentText()=="全部")
-//    {
+    //    QModelIndex currentIndex;
+    //    goods_model->setTable("GOODS");
+    //    if(ui->comboBox->currentText()=="全部")
+    //    {
 
-//    }
-//    else
-//    {
-//        goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-//    }
-//    goods_model->select();//获取表
-//    currentIndex=goods_model->index(r,0);//id
-//    ui->id->setText(goods_model->data(currentIndex).toString());
+    //    }
+    //    else
+    //    {
+    //        goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
+    //    }
+    //    goods_model->select();//获取表
+    //    currentIndex=goods_model->index(r,0);//id
+    //    ui->id->setText(goods_model->data(currentIndex).toString());
 
-//    currentIndex=goods_model->index(r,1);//名称
-//    ui->name->setText(goods_model->data(currentIndex).toString());
+    //    currentIndex=goods_model->index(r,1);//名称
+    //    ui->name->setText(goods_model->data(currentIndex).toString());
 
-//    currentIndex=goods_model->index(r,2);//库存
-//    ui->stock->setText(goods_model->data(currentIndex).toString());
+    //    currentIndex=goods_model->index(r,2);//库存
+    //    ui->stock->setText(goods_model->data(currentIndex).toString());
 
-//    currentIndex=goods_model->index(r,4);//单价
-//    ui->price->setText(goods_model->data(currentIndex).toString());
+    //    currentIndex=goods_model->index(r,4);//单价
+    //    ui->price->setText(goods_model->data(currentIndex).toString());
 
-//    QSqlQuery query; //类别
-//    query.exec(QString("select kind from GOODS where goods_id='%1'").arg(ui->id->text()));
-//    query.next();
-//    ui->comboBox->setCurrentText(query.value(0).toString());
-//    //    QSqlQuery query; //类别
-//    //    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
-//    //    query.next();
-//    //ui->kind->setCurrentText(query.value(0).toString());
+    //    QSqlQuery query; //类别
+    //    query.exec(QString("select kind from GOODS where goods_id='%1'").arg(ui->id->text()));
+    //    query.next();
+    //    ui->comboBox->setCurrentText(query.value(0).toString());
+    //    //    QSqlQuery query; //类别
+    //    //    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
+    //    //    query.next();
+    //    //ui->kind->setCurrentText(query.value(0).toString());
 
-//    goods_model->setTable("GOODS");
-//    goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-//    goods_model->select();
-//    ui->tableView->setModel(goods_model);
+    //    goods_model->setTable("GOODS");
+    //    goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
+    //    goods_model->select();
+    //    ui->tableView->setModel(goods_model);
 
-//    ui->spinBox->setValue(1);
-//    on_spinBox_valueChanged(1);
+    //    ui->spinBox->setValue(1);
+    //    on_spinBox_valueChanged(1);
 
 
 }
@@ -772,15 +771,15 @@ void MyClient::onTableSelectChange(int row)
     QModelIndex index;
 
     if(ui->comboBox->currentText()=="全部")
-     {
-    goods_model->setTable("goods");
-    goods_model->select();
-    }
-else
     {
-    goods_model->setTable("goods");
-    goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-    goods_model->select();
+        goods_model->setTable("goods");
+        goods_model->select();
+    }
+    else
+    {
+        goods_model->setTable("goods");
+        goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
+        goods_model->select();
     }
     index=goods_model->index(r,0);//id
     ui->id->setText(goods_model->data(index).toString());
@@ -789,21 +788,21 @@ else
     ui->name->setText(goods_model->data(index).toString());
     index=goods_model->index(r,5);//类别
     ui->label_20->setText(goods_model->data(index).toString());
-        index=goods_model->index(r,2);//库存
-        ui->stock->setText(goods_model->data(index).toString());
+    index=goods_model->index(r,2);//库存
+    ui->stock->setText(goods_model->data(index).toString());
     //ui->start->setText(goods_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
     index=goods_model->index(r,2);//数量
     ui->spinBox->setValue(1);
     index=goods_model->index(r,4);//售价
     ui->price->setText(goods_model->data(index).toString());
-ui->sum->setText(goods_model->data(index).toString());
+    ui->sum->setText(goods_model->data(index).toString());
 
     if(ui->comboBox->currentText()=="全部")
-     {
-    goods_model->setTable("goods");
-    goods_model->select();
-    ui->tableView->setModel(goods_model);
-    return;
+    {
+        goods_model->setTable("goods");
+        goods_model->select();
+        ui->tableView->setModel(goods_model);
+        return;
     }
 
     goods_model->setTable("goods");
@@ -814,27 +813,27 @@ ui->sum->setText(goods_model->data(index).toString());
 //根据左边种类筛选右侧商品
 void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
 {
-//    cout<<"in on_comboBox_currentTextChanged()";
-//    goods_model->setTable("GOODS");
-//    if (ui->comboBox->currentText()=="全部")
-//    {
-//        on_pushButton_clicked();
-//        return;
-//    }
+    //    cout<<"in on_comboBox_currentTextChanged()";
+    //    goods_model->setTable("GOODS");
+    //    if (ui->comboBox->currentText()=="全部")
+    //    {
+    //        on_pushButton_clicked();
+    //        return;
+    //    }
 
-//    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
-//    goods_model->select();
-//    ui->tableView->setModel(goods_model);
+    //    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
+    //    goods_model->select();
+    //    ui->tableView->setModel(goods_model);
 
 
     if(ui->comboBox->currentText()=="全部")
-     {
-    goods_model->setTable("discounts");
-    goods_model->select();
-    ui->tableView->setModel(goods_model);
-    return;
+    {
+        goods_model->setTable("discounts");
+        goods_model->select();
+        ui->tableView->setModel(goods_model);
+        return;
     }
-//    k=1;
+    //    k=1;
     cout<<"in on_kind_currentTextChanged()";
     goods_model->setTable("goods");
     goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
