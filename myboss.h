@@ -22,8 +22,6 @@ public:
 private slots:
     void on_loginAgain_clicked();
 
-    void on_pushButton_clicked();
-
     void on_weeklyBill_clicked();
 
     void on_monthlyBill_clicked();
@@ -38,6 +36,8 @@ private slots:
 
     void on_kind_currentTextChanged(const QString &arg1);
 
+
+    void on_kind_activated(const QString &arg1);
 
 private:
     Ui::MyBoss *ui;

@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>835</width>
-    <height>519</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>员工界面</string>
@@ -31,8 +43,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>817</width>
-        <height>420</height>
+        <width>1188</width>
+        <height>727</height>
        </rect>
       </property>
       <attribute name="label">
@@ -64,7 +76,7 @@
         <string>商品：</string>
        </property>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -88,16 +100,9 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>显示所有商品</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -225,7 +230,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="amount"/>
           </item>
          </layout>
         </item>
@@ -251,13 +256,13 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>640</x>
+         <x>490</x>
          <y>30</y>
-         <width>137</width>
-         <height>22</height>
+         <width>301</width>
+         <height>24</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -269,7 +274,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox"/>
+         <widget class="QComboBox" name="comboBox">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -279,8 +291,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>817</width>
-        <height>420</height>
+        <width>1188</width>
+        <height>727</height>
        </rect>
       </property>
       <attribute name="label">

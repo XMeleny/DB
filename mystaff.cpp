@@ -58,15 +58,14 @@ void MyStaff::initMyStaff()
 
 
 
-    goods_model=new QSqlTableModel;
+    //    goods_model=new QSqlTableModel;
     goods_model->setTable("GOODS");
     goods_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     goods_model->select(); //选取整个表的所有行
 
     ui->tableView_2->setModel(goods_model);
-    ui->tableView_2->hideColumn(0);//hide the id,in case the changes
-    ui->tableView_2->hideColumn(2);//hide the amount
-    ui->tableView_2->hideColumn(3);//hide the cost
+    ui->tableView_2->setColumnHidden(0,true);
+    ui->tableView_2->setColumnHidden(5,true);
     // }
 
 }
@@ -75,95 +74,38 @@ void MyStaff::initMyStaff()
 //点击右侧商品，左边修改
 void MyStaff::on_tableView_clicked(const QModelIndex &index)
 {
-    //    cout<<"in on_tableView_click function"<<endl;
-    //    //    onTableSelectChange(1);
-    //    goods_model->setTable("GOODS");
-    //    goods_model->select();
-
-    //    QSqlRecord record=goods_model->record(index.row());
-
-    //    ui->name->setText(record.value("goods_name").toString());
-    //    qDebug()<<record.value("goods_name").toString()<<endl;
-    //    ui->cost->setText(record.value("cost").toString());
-    //    qDebug()<<record.value("cost").toString()<<endl;
-    //    ui->price->setText(record.value("price").toString());
-    //    qDebug()<<record.value("price").toString()<<endl;
-    //    ui->id->setText(record.value("goods_id").toString());
-    //    qDebug()<<record.value("goods_id").toString()<<endl;
-    //    ui->spinBox->setValue(record.value("amount").toInt());
-    //    qDebug()<<record.value("amount").toString()<<endl;
-    //    ui->comboBox->setCurrentText(record.value("kind").toString());
-    //    qDebug()<<record.value("kind").toString()<<endl;
-    //    goods_model->setTable("GOODS");
-    //    goods_model->select();
-    //    ui->tableView->setModel(goods_model);
-
     cout<<"in on_tableView_clicked()";
     onTableSelectChange(1);
-
 }
 
 void MyStaff::onTableSelectChange(int row)
 {
     cout<<"in onTableSelectChange()";
+
     int r=1;
     if(row!=0)
         r=ui->tableView->currentIndex().row();
 
-    QModelIndex index;
+    int id=goods_model->data(goods_model->index(r,0)).toInt();
 
-    if(ui->comboBox->currentText()=="全部")
+    QSqlQuery query;
+    query.prepare("select * from GOODS where goods_id=:goods_id");
+    query.bindValue(":goods_id",id);
+    query.exec();
+
+    if (query.next())
     {
-        goods_model->setTable("goods");
-        goods_model->select();
+        ui->id->setText(QString::number(id));
+        ui->name->setText(query.value("goods_name").toString());
+        ui->cost->setText(query.value("cost").toString());
+        ui->price->setText(query.value("price").toString());
+        ui->amount->setText(query.value("amount").toString());
+        ui->lineEdit_2->setText(query.value("kind").toString());
+
     }
-    else
-    {
-        goods_model->setTable("goods");
-        goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->lineEdit_2->text()));
-        goods_model->select();
-    }
-    index=goods_model->index(r,0);//id
-    ui->id->setText(goods_model->data(index).toString());
-
-    index=goods_model->index(r,1);//名称
-    ui->name->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,5);//类别
-    ui->lineEdit_2->setText(goods_model->data(index).toString());
-    //ui->start->setText(goods_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
-    index=goods_model->index(r,2);//数量
-    ui->lineEdit->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,3);//进价
-    ui->cost->setText(goods_model->data(index).toString());
-    index=goods_model->index(r,4);//售价
-    ui->price->setText(goods_model->data(index).toString());
-
-
-
-
-    //ui->end->setText(goods_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
-    //    index=goods_model->index(r,2);
-    //    ui->lineEdit_2->setText(goods_model->data(index).toString());
-    //    QSqlQuery query; //类别
-    //    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
-    //    query.next();
-    //    ui->comboBox_4->setCurrentText(query.value(0).toString());
-    //    if(k==1)
-    //        return;
-
-    if(ui->comboBox->currentText()=="全部")
-    {
-        goods_model->setTable("goods");
-        goods_model->select();
-        ui->tableView->setModel(goods_model);
-        return;
-    }
-
-    goods_model->setTable("goods");
-    goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->lineEdit_2->text()));
-    goods_model->select();
-    ui->tableView->setModel(goods_model);
 }
+
+
 //入库操作
 void MyStaff::on_putIn_clicked()
 {
@@ -172,7 +114,7 @@ void MyStaff::on_putIn_clicked()
     QString kind1=ui->lineEdit_2->text();
     double cost1=ui->cost->text().toDouble();
     double price1=ui->price->text().toDouble();
-    int amount1=ui->lineEdit->text().toInt();
+    int amount1=ui->amount->text().toInt();
     cout<<name1<<kind1<<cost1<<price1<<amount1;
 
     //插入不成功
@@ -200,13 +142,35 @@ void MyStaff::on_putIn_clicked()
     goods_model->select();
     ui->tableView->setModel(goods_model);
 
+    //将商品类型显示到comboBox
+    QStringList kinds;
+    kinds.append("全部");
+    //将商品类型显示到comboBox，且不重复，测试通过
+    query.exec("select distinct kind from GOODS;");
+    cout<<query.lastError();
+    while(query.next()){
+        kinds.append(query.value(0).toString());
+        //cout<<query.value(0);
+    }
+    QCompleter* com=new QCompleter(kinds,this);
+    ui->comboBox->clear();
+    ui->comboBox->addItems(kinds);
+    ui->comboBox->setCompleter(com);
+
+    goods_model->setTable("GOODS");
+    goods_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    goods_model->select(); //选取整个表的所有行
+        ui->tableView_2->setModel(goods_model);
+
+        ui->tableView_2->setColumnHidden(0,true);
+        ui->tableView_2->setColumnHidden(5,true);
+
 }
 
 //清仓操作
 void MyStaff::on_putOut_clicked()
 {
-    if(createConnection())
-    {
+
         //删除数据库记录
         QSqlQuery query;
         query.exec(QString("delete from GOODS where goods_id=%1").arg(ui->id->text()));
@@ -214,8 +178,9 @@ void MyStaff::on_putOut_clicked()
         ui->name->setText("");
         ui->cost->setText("");
         ui->price->setText("");
-        ui->lineEdit->setText(0);
+        ui->amount->setText(0);
         ui->id->setText("");
+        ui->lineEdit_2->clear();
 
         //        QSqlTableModel *goods_model=new QSqlTableModel;
         goods_model=new QSqlTableModel(this);
@@ -223,7 +188,28 @@ void MyStaff::on_putOut_clicked()
         goods_model->select();
         ui->tableView->setModel(goods_model);
 
-    }
+        //将商品类型显示到comboBox
+        QStringList kinds;
+        kinds.append("全部");
+        //将商品类型显示到comboBox，且不重复，测试通过
+        query.exec("select distinct kind from GOODS;");
+        cout<<query.lastError();
+        while(query.next()){
+            kinds.append(query.value(0).toString());
+            //cout<<query.value(0);
+        }
+        QCompleter* com=new QCompleter(kinds,this);
+        ui->comboBox->clear();
+        ui->comboBox->addItems(kinds);
+        ui->comboBox->setCompleter(com);
+
+        goods_model->setTable("GOODS");
+        goods_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        goods_model->select(); //选取整个表的所有行
+            ui->tableView_2->setModel(goods_model);
+
+            ui->tableView_2->setColumnHidden(0,true);
+            ui->tableView_2->setColumnHidden(5,true);
 }
 
 void MyStaff::on_pushButton_2_clicked()
@@ -256,7 +242,7 @@ void MyStaff::on_comboBox_currentTextChanged(const QString &arg1)
 
     if(ui->comboBox->currentText()=="全部")
     {
-        goods_model->setTable("discounts");
+        goods_model->setTable("GOODS");
         goods_model->select();
         ui->tableView->setModel(goods_model);
         return;
@@ -269,9 +255,26 @@ void MyStaff::on_comboBox_currentTextChanged(const QString &arg1)
     ui->tableView->setModel(goods_model);
 }
 
-void MyStaff::on_pushButton_3_clicked()
+//void MyStaff::on_pushButton_3_clicked()
+//{
+//    goods_model->setTable("GOODS");
+//    goods_model->select();
+//    ui->tableView->setModel(goods_model);
+//    ui->cost->clear();
+//    ui->lineEdit_2->clear();
+//    ui->id->clear();
+//    ui->name->clear();
+//    ui->price->clear();
+//    ui->amount->clear();
+
+//}
+
+void MyStaff::on_comboBox_activated(const QString &arg1)
 {
-    goods_model->setTable("GOODS");
-    goods_model->select();
-    ui->tableView->setModel(goods_model);
+    ui->id->clear();
+    ui->name->clear();
+    ui->cost->clear();
+    ui->price->clear();
+    ui->amount->clear();
+    ui->lineEdit_2->clear();
 }

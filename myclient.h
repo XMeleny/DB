@@ -33,7 +33,7 @@ private slots:
 
     void on_tableView_clicked(const QModelIndex &index);
 
-    void on_pushButton_clicked();
+//    void on_pushButton_clicked();
 
     void on_spinBox_valueChanged(int arg1);
 
@@ -46,6 +46,8 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_Btn_delete_clicked();
+
+    void on_comboBox_activated(const QString &arg1);
 
 private:
     Ui::MyClient *ui;

@@ -289,13 +289,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>显示所有优惠</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget">
@@ -377,6 +370,11 @@
            <widget class="QComboBox" name="comboBox_4">
             <item>
              <property name="text">
+              <string/>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>满100减10</string>
              </property>
             </item>
@@ -425,7 +423,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="start"/>
+           <widget class="QDateEdit" name="start"/>
           </item>
          </layout>
         </item>
@@ -445,7 +443,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="end"/>
+           <widget class="QDateEdit" name="end"/>
           </item>
          </layout>
         </item>

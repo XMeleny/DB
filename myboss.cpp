@@ -1,4 +1,4 @@
-﻿#include "myboss.h"
+#include "myboss.h"
 #include "ui_myboss.h"
 #include"login.h"
 #include"connection.h"
@@ -106,7 +106,7 @@ void MyBoss::on_weeklyBill_clicked()
     ui->tableView_2->setColumnHidden(0,true);
     ui->tableView_2->setColumnHidden(1,true);
     ui->tableView_2->setColumnHidden(2,true);
-    ui->tableView_2->setColumnHidden(5,true);
+    ui->tableView_2->setColumnHidden(3,true);
     ui->tableView_2->setColumnHidden(6,true);
     ui->tableView_2->setColumnHidden(7,true);
 }
@@ -121,14 +121,27 @@ void MyBoss::on_monthlyBill_clicked()
     qDebug()<<year<<month;
     QString begin = year +"-"+ month+"-" +"01";
     int m = month.toInt();
-    int next = m+1;
-    QDate date = QDate::fromString(begin,"yyyy/M/d");
+    int y = year.toInt();
+    int y_next=y+1;
+    QString year2=QString::number(y_next,10);
+    QString end;
+    int next;
+    if(m!=12)
+        next = m+1;
+    if(m==12)
+        next=1;
+    //    QDate date = QDate::fromString(begin,"yyyy/M/d");
     QString month2 = QString::number(next,10);
-    QString end = year +"-"+ month2 +"-"+"01";
+    if(m!=12)
+        end = year +"-"+ month2 +"-"+"01";
+    else
+        end = year2 +"-"+ month2 +"-"+"01";
     qDebug()<<begin<<end;
     orders_model->setTable("ORDERS");
     orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<'%2'").arg(begin).arg(end));
     orders_model->select();
+
+
     ui->tableView_2->setModel(orders_model);
     QSqlQuery query;
     query.prepare("select * from orders where YEAR(timing)=:year and MONTH(timing)=:month");
@@ -149,7 +162,7 @@ void MyBoss::on_monthlyBill_clicked()
     ui->tableView_2->setColumnHidden(0,true);
     ui->tableView_2->setColumnHidden(1,true);
     ui->tableView_2->setColumnHidden(2,true);
-    ui->tableView_2->setColumnHidden(5,true);
+    ui->tableView_2->setColumnHidden(3,true);
     ui->tableView_2->setColumnHidden(6,true);
     ui->tableView_2->setColumnHidden(7,true);
 }
@@ -182,28 +195,55 @@ void MyBoss::on_yearBill_clicked()
     ui->tableView_2->setColumnHidden(0,true);
     ui->tableView_2->setColumnHidden(1,true);
     ui->tableView_2->setColumnHidden(2,true);
-    ui->tableView_2->setColumnHidden(5,true);
+    ui->tableView_2->setColumnHidden(3,true);
     ui->tableView_2->setColumnHidden(6,true);
-    ui->tableView_2->setColumnHidden(7,true);
+    ui->tableView_2->setColumnHidden(7,true);//bug
 }
 
 void MyBoss::on_addDiscount_clicked()
 {
+//    cout<<ui->dateEdit->date();
+    if(ui->name->text()=="")
+    {
+        QMessageBox::warning(this,tr("error!!!"),tr("no discount name!"),QMessageBox::Yes);
+        return;
+    }
+
+    if(ui->comboBox_4->currentText()=="")
+    {
+        QMessageBox::warning(this,tr("error!!!"),tr("no discount kind!"),QMessageBox::Yes);
+        return;
+    }
+    if(ui->start->text()=="")
+    {
+        QMessageBox::warning(this,tr("error!!!"),tr("no discount start time!"),QMessageBox::Yes);
+        return;
+    }
+    if(ui->end->text()=="")
+    {
+        QMessageBox::warning(this,tr("error!!!"),tr("no discount end time!"),QMessageBox::Yes);
+        return;
+    }
+
 
     QSqlQuery query;
     query.prepare("insert into discounts(discount_name,kind,start_time,end_time) "
                   "values(?,?,?,?)");
 
     query.addBindValue(ui->name->text());
-    query.addBindValue(ui->kind->currentText());
-    query.addBindValue(ui->start->text());
-    query.addBindValue(ui->end->text());
+    query.addBindValue(ui->comboBox_4->currentText());
+//    query.addBindValue(ui->start->text());
+//    query.addBindValue(ui->end->text());
+    query.addBindValue(ui->start->date());
+    query.addBindValue(ui->end->date());
     query.exec();
 
     //刷新tableview信息
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);
+
+    QMessageBox::warning(this,tr("success"),tr("successfully add discount!"),QMessageBox::Yes);
 }
 
 //删除优惠
@@ -219,8 +259,8 @@ void MyBoss::on_deleteDiscount_clicked()
         //刷新tableview信息
         ui->name->setText("");
         ui->id->clear();
-        ui->start->setText("");
-        ui->end->setText("");
+        ui->start->clear();
+        ui->end->clear();
 
         //        QSqlTableModel *discount_model=new QSqlTableModel;
         discount_model=new QSqlTableModel(this);
@@ -228,6 +268,7 @@ void MyBoss::on_deleteDiscount_clicked()
         discount_model->select();
         ui->tableView->setModel(discount_model);
 
+        QMessageBox::warning(this,tr("success"),tr("successfully delete discount"),QMessageBox::Yes);
     }
 
 }
@@ -237,21 +278,11 @@ void MyBoss::on_deleteDiscount_clicked()
 
 void MyBoss::initMyStaff()
 {
-    //    if(createConnection())
-    //    {
-    QStringList strings;
+    QStringList years;
 
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
-    QStringList month;
-    month << "1" << "2" << "3" << "4" << "5"<<"6"<<"7"<<"8"<<"9"<<"10"<<"11"<<"12";
-    ui->comboBox_2->addItems(month);
-    QStringList year;
-    year<<"2017"<<"2018"<<"2019";
-    ui->comboBox->addItems(year);
-    QStringList year_2;
-    year_2<<"2017"<<"2018"<<"2019";
-    ui->comboBox_3->addItems(year_2);
+
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
@@ -273,25 +304,33 @@ void MyBoss::initMyStaff()
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);
-    ui->tableView->setColumnHidden(0,true);
+//    ui->tableView->setColumnHidden(0,true);
 
     query.exec("select distinct YEAR(timing) from orders;");
     while(query.next())
     {
-        strings.append(query.value(0).toString());
+        years.append(query.value(0).toString());
         //cout<<query.value(0);
     }
 
-    QCompleter* com=new QCompleter(strings,this);
+    QCompleter* com=new QCompleter(years,this);
     ui->comboBox_3->clear();
-    ui->comboBox_3->addItems(strings);
+    ui->comboBox_3->addItems(years);
     ui->comboBox_3->setCompleter(com);
 
     ui->comboBox->clear();
-    ui->comboBox->addItems(strings);
+    ui->comboBox->addItems(years);
     ui->comboBox->setCompleter(com);
 
-
+    QStringList months;
+    query.exec("select distinct MONTH(timing) from orders;");//todo: follow the year
+    while(query.next())
+    {
+        months.append(query.value(0).toString());
+    }
+    ui->comboBox_2->clear();
+    ui->comboBox_2->addItems(months);
+    ui->comboBox_2->setCompleter(com);
 }
 
 
@@ -310,57 +349,78 @@ void MyBoss::onTableSelectChange(int row)
     if(row!=0)
         r=ui->tableView->currentIndex().row();
 
-    QModelIndex index;
+//    int id=discount_model->data(discount_model->index(r,0)).toInt();
 
-    if(ui->kind->currentText()=="全部")
+//    QSqlQuery query;
+//    query.prepare("select * from DISCOUNTS where discount_id=:discount_id");
+//    query.bindValue(":discount",id);
+//    query.exec();
+
+//    if (query.next())
+//    {
+//        ui->id->setText(QString::number(id));
+//        ui->name->setText(query.value("name").toString());
+//        ui->start->setDate(query.value("start_time").toDate());
+//        ui->end->setDate(query.value("end_time").toDate());
+//        ui->comboBox_4->setCurrentText(query.value("kind").toString());
+//    }
+//    QModelIndex index;
+
+//    if(ui->kind->currentText()=="全部")
+//    {
+//        discount_model->setTable("discounts");
+//        discount_model->select();
+//    }
+//    else
+//    {
+//        discount_model->setTable("discounts");
+//        discount_model->setFilter(QObject::tr("kind= '%1'").arg(ui->kind->currentText()));
+//        discount_model->select();
+//    }
+
+//    index=discount_model->index(r,0);//id
+//    ui->id->setText(discount_model->data(index).toString());
+    int id=discount_model->data(discount_model->index(r,0)).toInt();
+    QSqlQuery query;
+    query.prepare("select * from DISCOUNTS where discount_id=:discount_id");
+    query.bindValue(":discount_id",id);
+    query.exec();
+    cout<<query.lastQuery()<<query.lastError();
+
+    if(query.next())
     {
-        discount_model->setTable("discounts");
-        discount_model->select();
-    }
-    else
-    {
-        discount_model->setTable("discounts");
-        discount_model->setFilter(QObject::tr("kind= '%1'").arg(ui->kind->currentText()));
-        discount_model->select();
-    }
-    index=discount_model->index(r,0);//id
-    ui->id->setText(discount_model->data(index).toString());
-
-    index=discount_model->index(r,1);//名称
-    ui->name->setText(discount_model->data(index).toString());
-    index=discount_model->index(r,3);//开始时间
-    ui->start->setText(discount_model->data(index).toString());
-    //ui->start->setText(discount_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
-    index=discount_model->index(r,4);//结束时间
-    ui->end->setText(discount_model->data(index).toString());
-    //ui->end->setText(discount_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
-    index=discount_model->index(r,2);
-    //    ui->lineEdit_2->setText(discount_model->data(index).toString());
-    QSqlQuery query; //类别
-    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
-    query.next();
-    ui->comboBox_4->setCurrentText(query.value(0).toString());
-    //    if(k==1)
-    //        return;
-
-    if(ui->kind->currentText()=="全部")
-    {
-        discount_model->setTable("discounts");
-        discount_model->select();
-        ui->tableView->setModel(discount_model);
-        return;
+        ui->id->setText(QString::number(id));
+        ui->name->setText(query.value("discount_name").toString());
+        ui->start->setDate(query.value("start_time").toDate());
+        ui->end->setDate(query.value("end_time").toDate());
+        ui->comboBox_4->setCurrentText(query.value("kind").toString());
     }
 
-    discount_model->setTable("discounts");
-    discount_model->setFilter(QObject::tr("kind= '%1'").arg(ui->kind->currentText()));
-    discount_model->select();
-    ui->tableView->setModel(discount_model);
+
+//    if(ui->kind->currentText()=="全部")
+//    {
+//        discount_model->setTable("discounts");
+//        discount_model->select();
+//        ui->tableView->setModel(discount_model);
+//        return;
+//    }
+
+//    discount_model->setTable("discounts");
+//    discount_model->setFilter(QObject::tr("kind= '%1'").arg(ui->kind->currentText()));
+//    discount_model->select();
+//    ui->tableView->setModel(discount_model);
 
 }
 
 //下拉框 切换优惠种类的时候
 void MyBoss::on_kind_currentTextChanged(const QString &arg1)
 {
+    ui->id->clear();
+    ui->name->clear();
+    ui->comboBox_4->setCurrentText("");
+    ui->start->clear();
+    ui->end->clear();
+
     if(ui->kind->currentText()=="全部")
     {
         discount_model->setTable("discounts");
@@ -369,7 +429,6 @@ void MyBoss::on_kind_currentTextChanged(const QString &arg1)
         return;
     }
 
-    //    k=1;
     cout<<"in on_kind_currentTextChanged()";
     discount_model->setTable("discounts");
     discount_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
@@ -377,12 +436,13 @@ void MyBoss::on_kind_currentTextChanged(const QString &arg1)
     ui->tableView->setModel(discount_model);
 }
 
-//点击按钮 显示所有优惠
-void MyBoss::on_pushButton_clicked()
-{
 
-    cout<<"in on_pushButton_clicked()";
-    discount_model->setTable("discounts");
-    discount_model->select();
-    ui->tableView->setModel(discount_model);
+
+void MyBoss::on_kind_activated(const QString &arg1)
+{
+    ui->id->clear();
+    ui->name->clear();
+    ui->comboBox_4->setCurrentText("");
+    ui->start->clear();
+    ui->end->clear();
 }

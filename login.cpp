@@ -1,4 +1,4 @@
-﻿#include "login.h"
+#include "login.h"
 #include "myclient.h"
 #include "myboss.h"
 #include "mystaff.h"
@@ -31,26 +31,38 @@ void LogIn::on_loginButton_clicked()
     MyStaff staff;
 
     //先检查是否是老板
-    if(this->ui->name->text().trimmed() == tr("boss") &&
-            this->ui->passward->text().trimmed()== tr("123"))  //去除lineEdit内的用户名和密码进行校验
+    if(this->ui->name->text().trimmed() == tr("boss"))  //去除lineEdit内的用户名和密码进行校验
     {
-        //登陆成功后显示对话框
-        close();
-        boss.exec();
+        if (this->ui->passward->text().trimmed()== tr("123"))//password right
+        {
+            //登陆成功后显示对话框
+            close();
+            boss.exec();
+        }
+        else
+        {
+            QMessageBox::warning(this,tr("error!!!"),tr("wrong password"),QMessageBox::Yes);
+        }
+
 
     }
     //然后检查是否是员工
-    else if(this->ui->name->text().trimmed() == tr("") &&
-            this->ui->passward->text().trimmed()== tr(""))  //去除lineEdit内的用户名和密码进行校验
+    else if(this->ui->name->text().trimmed() == tr("")) //去除lineEdit内的用户名和密码进行校验
     {
-        //登陆成功后显示对话框
-        close();
-        staff.exec();
+        if(this->ui->passward->text().trimmed()== tr(""))
+        {
+            //登陆成功后显示对话框
+            close();
+            staff.exec();
+        }
+        else
+        {
+            QMessageBox::warning(this,tr("error!!!"),tr("wrong password"),QMessageBox::Yes);
+        }
     }
     //然后检查是否是顾客、或者账号不存在
     else
     {
-
         QSqlQuery query;
 
         //检查账号是否存在

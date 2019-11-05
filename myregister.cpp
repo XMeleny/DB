@@ -1,4 +1,4 @@
-﻿#include "myregister.h"
+#include "myregister.h"
 #include "ui_myregister.h"
 
 MyRegister::MyRegister(QWidget *parent) :
