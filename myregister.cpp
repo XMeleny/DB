@@ -1,4 +1,4 @@
-#include "myregister.h"
+﻿#include "myregister.h"
 #include "ui_myregister.h"
 
 MyRegister::MyRegister(QWidget *parent) :
@@ -34,14 +34,14 @@ void MyRegister::on_register_2_clicked()
         query.addBindValue(ui->psw->text());
         query.addBindValue(0);
         query.exec();
-        QMessageBox::warning(this,tr("注册成功"),tr("欢迎"),QMessageBox::Yes);
+        QMessageBox::warning(this,tr("success"),tr("welcome!"),QMessageBox::Yes);
         this->close();
 
     }
     else//检查发现该账号已经被注册
     {
-        QMessageBox::warning(this,tr("注册失败"),tr("账号已存在"),QMessageBox::Yes);
-        cout << "注册失败，账号已注册";
+        QMessageBox::warning(this,tr("fail"),tr("account is already existed"),QMessageBox::Yes);
+        //        cout << "注册失败，账号已注册";
     }
 
 }

@@ -1,4 +1,4 @@
-#include "login.h"
+﻿#include "login.h"
 #include "myclient.h"
 #include "myboss.h"
 #include "mystaff.h"
@@ -12,7 +12,7 @@ LogIn::LogIn(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LogIn)
 {
-    this->setWindowTitle(tr("登录界面"));
+    this->setWindowTitle(tr("login"));
     ui->setupUi(this);
     ui->passward->setEchoMode(QLineEdit::Password);//当输入密码时，显示为*******
 }
@@ -59,7 +59,7 @@ void LogIn::on_loginButton_clicked()
         query.bindValue(":id",CustomerIdLogin);
         query.exec();
 
-//        query.exec(QString("select *from CUSTOMERS where customer_id = %1").arg(CustomerIdLogin));
+        //        query.exec(QString("select *from CUSTOMERS where customer_id = %1").arg(CustomerIdLogin));
 
         if (query.next() == false)
         {
@@ -78,7 +78,7 @@ void LogIn::on_loginButton_clicked()
             if (query.value("psw").toString() == ui->passward->text())
             {
                 //密码正确，登录成功，跳转到购物界面
-                cout<<"登录成功";
+                cout<<"login success";
                 //登陆成功后显示对话框
                 close();
                 //fixme: the init have run twice

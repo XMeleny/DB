@@ -1,4 +1,4 @@
-#include "myclient.h"
+﻿#include "myclient.h"
 #include "ui_myclient.h"
 #include"login.h"
 #include"connection.h"
@@ -610,7 +610,7 @@ void MyClient::on_pushButton_2_clicked()
 
     delete []lackGoodsId;
 
-    QMessageBox::warning(this,tr("success"),tr("下单成功！"),QMessageBox::Yes);
+    QMessageBox::warning(this,tr("success"),tr("order success!"),QMessageBox::Yes);
 }
 
 //充值
