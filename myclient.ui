@@ -74,9 +74,21 @@
         <rect>
          <x>310</x>
          <y>50</y>
-         <width>841</width>
-         <height>521</height>
+         <width>840</width>
+         <height>520</height>
         </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>840</width>
+         <height>520</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>840</width>
+         <height>520</height>
+        </size>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
         <number>120</number>
