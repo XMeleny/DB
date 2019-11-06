@@ -43,8 +43,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1188</width>
-        <height>727</height>
+        <width>1182</width>
+        <height>701</height>
        </rect>
       </property>
       <attribute name="label">
@@ -55,8 +55,8 @@
         <rect>
          <x>320</x>
          <y>61</y>
-         <width>471</width>
-         <height>341</height>
+         <width>811</width>
+         <height>611</height>
         </rect>
        </property>
        <attribute name="verticalHeaderStretchLastSection">
@@ -79,15 +79,27 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>290</y>
-         <width>82</width>
+         <x>10</x>
+         <y>590</y>
+         <width>122</width>
          <height>83</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QPushButton" name="putIn">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>25</height>
+           </size>
+          </property>
           <property name="text">
            <string>入库</string>
           </property>
@@ -95,6 +107,18 @@
         </item>
         <item>
          <widget class="QPushButton" name="putOut">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>25</height>
+           </size>
+          </property>
           <property name="text">
            <string>清仓</string>
           </property>
@@ -107,8 +131,8 @@
         <rect>
          <x>0</x>
          <y>20</y>
-         <width>179</width>
-         <height>160</height>
+         <width>230</width>
+         <height>194</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -118,14 +142,14 @@
            <widget class="QLabel" name="label_9">
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>0</height>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>16777215</height>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -135,6 +159,18 @@
           </item>
           <item>
            <widget class="QLabel" name="id">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
             <property name="frameShape">
              <enum>QFrame::Box</enum>
             </property>
@@ -154,14 +190,14 @@
            <widget class="QLabel" name="label_2">
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>0</height>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>16777215</height>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -170,7 +206,20 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="name"/>
+           <widget class="QLineEdit" name="name">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -180,8 +229,14 @@
            <widget class="QLabel" name="label_3">
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>0</height>
+              <width>60</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -190,7 +245,20 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="cost"/>
+           <widget class="QLineEdit" name="cost">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -200,8 +268,14 @@
            <widget class="QLabel" name="label_4">
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>0</height>
+              <width>60</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -210,7 +284,20 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="price"/>
+           <widget class="QLineEdit" name="price">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -220,8 +307,14 @@
            <widget class="QLabel" name="label_5">
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>0</height>
+              <width>60</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -230,7 +323,20 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="amount"/>
+           <widget class="QLineEdit" name="amount">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -240,8 +346,14 @@
            <widget class="QLabel" name="label">
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>0</height>
+              <width>60</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>20</height>
              </size>
             </property>
             <property name="text">
@@ -250,7 +362,20 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_2"/>
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>160</width>
+              <height>25</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -259,15 +384,27 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>490</x>
-         <y>30</y>
-         <width>301</width>
-         <height>24</height>
+         <x>890</x>
+         <y>20</y>
+         <width>251</width>
+         <height>27</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QLabel" name="label_6">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>25</height>
+           </size>
+          </property>
           <property name="text">
            <string>选择种类：</string>
           </property>
@@ -277,8 +414,14 @@
          <widget class="QComboBox" name="comboBox">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>0</height>
+            <width>120</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>25</height>
            </size>
           </property>
          </widget>
@@ -291,8 +434,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1188</width>
-        <height>727</height>
+        <width>1182</width>
+        <height>701</height>
        </rect>
       </property>
       <attribute name="label">
@@ -315,10 +458,22 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>330</y>
-         <width>81</width>
-         <height>31</height>
+         <y>350</y>
+         <width>120</width>
+         <height>25</height>
         </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>25</height>
+        </size>
        </property>
        <property name="text">
         <string>提交修改</string>
