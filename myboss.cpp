@@ -41,9 +41,9 @@ void MyBoss::on_weeklyBill_clicked()
     ui->toolBox->setCurrentIndex(0);
     QDate date(QDate::currentDate());
     QDate target = date.addDays(-6);
-    qDebug()<<target;
+//    qDebug()<<target;
     int day1 =date.day();
-    int day2 = date.day();
+    int day2 = target.day();
     QString buffer1,buffer2;
     if(day1<10)
     {
@@ -60,6 +60,7 @@ void MyBoss::on_weeklyBill_clicked()
     else{
         buffer2 = QString("%1-%2-%3").arg(target.year()).arg(target.month()).arg(target.day());
     }
+    qDebug()<<buffer1<<buffer2;
     orders_model->setTable("ORDERS");
     orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<='%2'").arg(buffer2).arg(buffer1));
     orders_model->select();
@@ -208,7 +209,6 @@ void MyBoss::on_addDiscount_clicked()
         QMessageBox::warning(this,tr("error!!!"),tr("no discount name!"),QMessageBox::Yes);
         return;
     }
-
     if(ui->comboBox_4->currentText()=="")
     {
         QMessageBox::warning(this,tr("error!!!"),tr("no discount kind!"),QMessageBox::Yes);
@@ -224,25 +224,18 @@ void MyBoss::on_addDiscount_clicked()
         QMessageBox::warning(this,tr("error!!!"),tr("no discount end time!"),QMessageBox::Yes);
         return;
     }
-
-
     QSqlQuery query;
     query.prepare("insert into discounts(discount_name,kind,start_time,end_time) "
                   "values(?,?,?,?)");
-
     query.addBindValue(ui->name->text());
     query.addBindValue(ui->comboBox_4->currentText());
-//    query.addBindValue(ui->start->text());
-//    query.addBindValue(ui->end->text());
     query.addBindValue(ui->start->date());
     query.addBindValue(ui->end->date());
     query.exec();
-
     //刷新tableview信息
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);
-
     QMessageBox::warning(this,tr("success"),tr("successfully add discount!"),QMessageBox::Yes);
 }
 
@@ -279,40 +272,19 @@ void MyBoss::on_deleteDiscount_clicked()
 void MyBoss::initMyStaff()
 {
     QStringList years;
-
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
-
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
-
-
-    //将商品类型显示到combobox
-    //        query.exec("select kind from GOODS;");
-    //        while(query.next())
-    //        {
-    //            strings.append(query.value(0).toString());
-    //        }
-    //        QCompleter* com=new QCompleter(strings,this);
-    //        ui->kind->clear();
-    //        ui->kind->addItems(strings);
-    //        ui->kind->setCompleter(com);
-
-
-    //        将商品详情显示到tableView
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);
-//    ui->tableView->setColumnHidden(0,true);
-
     query.exec("select distinct YEAR(timing) from orders;");
     while(query.next())
     {
         years.append(query.value(0).toString());
-        //cout<<query.value(0);
     }
-
     QCompleter* com=new QCompleter(years,this);
     ui->comboBox_3->clear();
     ui->comboBox_3->addItems(years);

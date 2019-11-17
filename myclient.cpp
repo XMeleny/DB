@@ -40,9 +40,7 @@ void MyClient::initMyClient()
 {
     cout<<"init client"<<endl;
     cout<<customerId;
-
     ui->spinBox->setValue(0);
-
     QStringList strings;
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
@@ -67,6 +65,7 @@ void MyClient::initMyClient()
     ui->tableView->setModel(goods_model);
     ui->tableView->setColumnHidden(0,true);
     ui->tableView->setColumnHidden(3,true);
+    //ui->tableView->setColumnHidden(4,true);
     //显示顾客当前余额
     query.prepare("select money from CUSTOMERS where customer_id = ?");
     query.addBindValue(customerId);
@@ -299,8 +298,6 @@ void MyClient::on_Btn_buy_clicked()
 
                 }
             }
-            //    cout<<tempQuery1.lastError();
-
             //显示原价、折扣价在确认下单页面
             ui->original_cost->setText(QString::number(sum));
             ui->discounted_cost->setText(QString::number(tempSum));
@@ -324,7 +321,6 @@ void MyClient::updateShoppingCharts()
         shoppingLayout->removeWidget(widget);
         widget->deleteLater();
     }
-
     //add all
     QSqlQuery query;
     query.prepare("select * from shopping_charts where customer_id=:customer_id");
@@ -334,7 +330,6 @@ void MyClient::updateShoppingCharts()
 
     while(query.next())
     {
-
         //get goods_id
         int tempGoodsId=query.value("goods_id").toInt();
 
@@ -369,7 +364,6 @@ void MyClient::updateShoppingCharts()
         amount->setMinimum(1);
         amount->setMaximum(tempGoodsAmount);
         QLabel *sumMoney=new QLabel(sum);
-
         buy->setMinimumWidth(40);
         buy->setMaximumWidth(40);
         goodsName->setMinimumWidth(120);
@@ -378,9 +372,7 @@ void MyClient::updateShoppingCharts()
         amount->setMaximumWidth(90);
         sumMoney->setMinimumWidth(100);
         sumMoney->setMaximumWidth(100);
-
         record->setMinimumHeight(30);
-
         //判断可不可打钩
         //这是商品的库存
         int goodsAmount = showGoodsAmount(tempGoodsId);
@@ -389,7 +381,6 @@ void MyClient::updateShoppingCharts()
         {
             //库存不够 不可打钩
             buy->setEnabled(false);
-
         }
 
         //当amount的spinbox发生改变时
@@ -406,10 +397,8 @@ void MyClient::updateShoppingCharts()
             temp.exec();
             cout<<temp.lastQuery();
             cout<<"in spinbox change: "<<temp.lastError();
-
             sumMoney->setText(QString::number(value*tempGoodsPrice));
         });
-
         //set the object's name, making it possible to select and buy
         record->setObjectName("record"+QString::number(tempGoodsId));
         buy->setObjectName("buy"+QString::number(tempGoodsId));
@@ -442,7 +431,6 @@ void MyClient::on_pushButton_2_clicked()
     QString goodsIds,goodsAmounts,id,amt;
     QList<QCheckBox*> checkboxList=shoppingWidget->findChildren<QCheckBox*>();
     QDate curDate=QDate::currentDate();
-
     //先判断够不够钱 不够钱直接return 但是先不扣钱
     QSqlQuery query;
     query.prepare("select money from CUSTOMERS where customer_id = ?");
@@ -456,7 +444,6 @@ void MyClient::on_pushButton_2_clicked()
         if (customerMoney < ui->discounted_cost->text().toFloat())
         {
             //TODO:顾客余额不足，提示请先充值？自动跳转？显示支付失败
-            //cout<<"余额不足，请先充值";
             QMessageBox::warning(this,tr("error!!!"),tr("not sufficient funds!"),QMessageBox::Yes);
             cout<<"lack of money";
             return;
@@ -471,14 +458,9 @@ void MyClient::on_pushButton_2_clicked()
         cout<<"error";
         return;
     }
-
     //够钱，继续判断库存 够库存的商品就扣钱扣库存，不够库存的就不扣，todo：然后统一统一弹窗提示
     query.exec("begin");
     cout<<"begin to check every stock";
-    //query.exec("select * from orders for update nowait");
-    //cout<<"begin to select";
-    //cout<<query.lastError();
-
     //直接扣库存，订单中只要有一个商品的库存不够，那么整个订单都失败 rollback
     bool pay = true;//判断订单是否能成功
     //TODO:后期把10改成一笔订单中的最大商品数
@@ -686,23 +668,7 @@ void MyClient::on_charge_clicked()
     //        cout<<"出错";
 }
 
-////初始化
-//void MyClient::on_pushButton_clicked()
-//{
-//    ui->comboBox->setCurrentText("all");
-//    goods_model->setTable("GOODS");
-//    goods_model->select();
-//    ui->tableView->setModel(goods_model);
-//    ui->id->setText("");
-//    ui->name->setText("");
-//    ui->stock->setText("");
-//    ui->price->setText("");
-//    ui->sum->setText("");
-//    ui->spinBox->setValue(0);
-//    ui->sum->setText("");
-//    ui->label_20->setText("");
 
-//}
 
 //选择数量
 void MyClient::on_spinBox_valueChanged(int arg1)
@@ -805,47 +771,6 @@ void MyClient::onTableSelectChange(int row)
         ui->sum->setText(QString::number(ui->spinBox->value()*query.value("price").toInt()));
     }
 
-//    QModelIndex index;
-
-//    if(ui->comboBox->currentText()=="全部")
-//    {
-//        goods_model->setTable("goods");
-//        goods_model->select();
-//    }
-//    else
-//    {
-//        goods_model->setTable("goods");
-//        goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-//        goods_model->select();
-//    }
-//    index=goods_model->index(r,0);//id
-//    ui->id->setText(goods_model->data(index).toString());
-
-//    index=goods_model->index(r,1);//名称
-//    ui->name->setText(goods_model->data(index).toString());
-//    index=goods_model->index(r,5);//类别
-//    ui->label_20->setText(goods_model->data(index).toString());
-//    index=goods_model->index(r,2);//库存
-//    ui->stock->setText(goods_model->data(index).toString());
-//    //ui->start->setText(goods_model->data(index).toString("yyyy-MM-dd hh:mm:ss"));
-//    index=goods_model->index(r,2);//数量
-//    ui->spinBox->setValue(1);
-//    index=goods_model->index(r,4);//售价
-//    ui->price->setText(goods_model->data(index).toString());
-//    ui->sum->setText(goods_model->data(index).toString());
-
-//    if(ui->comboBox->currentText()=="全部")
-//    {
-//        goods_model->setTable("goods");
-//        goods_model->select();
-//        ui->tableView->setModel(goods_model);
-//        return;
-//    }
-
-//    goods_model->setTable("goods");
-//    goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-//    goods_model->select();
-//    ui->tableView->setModel(goods_model);
 }
 //根据左边种类筛选右侧商品
 void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
@@ -878,24 +803,6 @@ void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
     ui->tableView->setModel(goods_model);
 
 }
-
-//显示所有商品
-
-//void MyClient::on_name_currentTextChanged(const QString &arg1)
-//{
-//    goods_model->setTable("GOODS");
-//    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
-//    goods_model->select();
-//    ui->tableView->setModel(goods_model);
-//}//TODO:搜索功能
-////按名字筛选？？？
-//void MyClient::on_name_currentTextChanged(const QString &arg1)
-//{
-//    goods_model->setTable("GOODS");
-//    goods_model->setFilter(QObject::tr("goods_name= '%1'").arg(arg1));
-//    goods_model->select();
-//    ui->tableView->setModel(goods_model);
-//}
 
 void MyClient::on_Btn_delete_clicked()
 {

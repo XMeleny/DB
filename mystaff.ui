@@ -43,8 +43,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1182</width>
-        <height>701</height>
+        <width>1188</width>
+        <height>727</height>
        </rect>
       </property>
       <attribute name="label">
@@ -79,8 +79,8 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>590</y>
+         <x>0</x>
+         <y>230</y>
          <width>122</width>
          <height>83</height>
         </rect>
@@ -434,8 +434,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1182</width>
-        <height>701</height>
+        <width>1188</width>
+        <height>727</height>
        </rect>
       </property>
       <attribute name="label">
