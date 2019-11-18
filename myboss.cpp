@@ -41,7 +41,6 @@ void MyBoss::on_weeklyBill_clicked()
     ui->toolBox->setCurrentIndex(0);
     QDate date(QDate::currentDate());
     QDate target = date.addDays(-6);
-//    qDebug()<<target;
     int day1 =date.day();
     int day2 = target.day();
     QString buffer1,buffer2;
@@ -100,7 +99,6 @@ void MyBoss::on_weeklyBill_clicked()
     }
     QString extra = QString("%1").arg(sum);
     QString str = "sum"+extra ;
-    //          strings="hello";
     strings = strings.sprintf("%.2f",sum);
     ui->lineEdit->setText("sum: "+strings);
     qDebug()<<"sum: "<<sum;
@@ -131,7 +129,6 @@ void MyBoss::on_monthlyBill_clicked()
         next = m+1;
     if(m==12)
         next=1;
-    //    QDate date = QDate::fromString(begin,"yyyy/M/d");
     QString month2 = QString::number(next,10);
     if(m!=12)
         end = year +"-"+ month2 +"-"+"01";
@@ -266,14 +263,9 @@ void MyBoss::on_deleteDiscount_clicked()
 
 }
 
-
-
-
 void MyBoss::initMyStaff()
 {
     QStringList years;
-    //显示账单的界面
-    ui->toolBox->setCurrentIndex(0);
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
     QSqlQuery query;
@@ -321,37 +313,7 @@ void MyBoss::onTableSelectChange(int row)
     if(row!=0)
         r=ui->tableView->currentIndex().row();
 
-//    int id=discount_model->data(discount_model->index(r,0)).toInt();
 
-//    QSqlQuery query;
-//    query.prepare("select * from DISCOUNTS where discount_id=:discount_id");
-//    query.bindValue(":discount",id);
-//    query.exec();
-
-//    if (query.next())
-//    {
-//        ui->id->setText(QString::number(id));
-//        ui->name->setText(query.value("name").toString());
-//        ui->start->setDate(query.value("start_time").toDate());
-//        ui->end->setDate(query.value("end_time").toDate());
-//        ui->comboBox_4->setCurrentText(query.value("kind").toString());
-//    }
-//    QModelIndex index;
-
-//    if(ui->kind->currentText()=="全部")
-//    {
-//        discount_model->setTable("discounts");
-//        discount_model->select();
-//    }
-//    else
-//    {
-//        discount_model->setTable("discounts");
-//        discount_model->setFilter(QObject::tr("kind= '%1'").arg(ui->kind->currentText()));
-//        discount_model->select();
-//    }
-
-//    index=discount_model->index(r,0);//id
-//    ui->id->setText(discount_model->data(index).toString());
     int id=discount_model->data(discount_model->index(r,0)).toInt();
     QSqlQuery query;
     query.prepare("select * from DISCOUNTS where discount_id=:discount_id");
@@ -367,20 +329,6 @@ void MyBoss::onTableSelectChange(int row)
         ui->end->setDate(query.value("end_time").toDate());
         ui->comboBox_4->setCurrentText(query.value("kind").toString());
     }
-
-
-//    if(ui->kind->currentText()=="全部")
-//    {
-//        discount_model->setTable("discounts");
-//        discount_model->select();
-//        ui->tableView->setModel(discount_model);
-//        return;
-//    }
-
-//    discount_model->setTable("discounts");
-//    discount_model->setFilter(QObject::tr("kind= '%1'").arg(ui->kind->currentText()));
-//    discount_model->select();
-//    ui->tableView->setModel(discount_model);
 
 }
 

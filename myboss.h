@@ -36,7 +36,6 @@ private slots:
 
     void on_kind_currentTextChanged(const QString &arg1);
 
-
     void on_kind_activated(const QString &arg1);
 
 private:

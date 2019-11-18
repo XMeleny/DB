@@ -8,8 +8,6 @@ MyClient::MyClient(QWidget *parent) :
     ui(new Ui::MyClient)
 {
     ui->setupUi(this);
-    //cout<<customerId;
-
     maxcount=10;
     count=0;
     goods_model=new QSqlTableModel(this);
@@ -18,8 +16,6 @@ MyClient::MyClient(QWidget *parent) :
     shoppingLayout=new QVBoxLayout;
     shoppingWidget->setLayout(shoppingLayout);
     ui->verticalLayout_8->addWidget(shoppingWidget);
-
-    //initMyClient();
 }
 
 MyClient::~MyClient()
@@ -50,7 +46,6 @@ void MyClient::initMyClient()
     while(query.next())
     {
         strings.append(query.value(0).toString());
-        //cout<<query.value(0);
     }
 
     QCompleter* com=new QCompleter(strings,this);
@@ -59,22 +54,19 @@ void MyClient::initMyClient()
     ui->comboBox->setCompleter(com);
 
     //将商品详情显示到tableView，测试通过
-    //QSqlTableModel *goods_model=new QSqlTableModel(this);
     goods_model->setTable("GOODS");
     goods_model->select();
     ui->tableView->setModel(goods_model);
     ui->tableView->setColumnHidden(0,true);
     ui->tableView->setColumnHidden(3,true);
-    //ui->tableView->setColumnHidden(4,true);
     //显示顾客当前余额
     query.prepare("select money from CUSTOMERS where customer_id = ?");
     query.addBindValue(customerId);
     query.exec();
     query.next();
-    //float remaining = query.value(0).toFloat();
     QString remaining = QString("%1").arg(query.value(0).toFloat());
     ui->remaining->setText(remaining);
-    //cout<<remaining;
+
 
 
     //购物车初始化:
@@ -100,11 +92,8 @@ void MyClient::on_addShoppingCart_clicked()
         return;
     }
 
-    //
-
     if(tempAmount==0)//todo:判断加购数量要小于库存，窗口提醒
     {
-
         QMessageBox::warning(this,tr("error!!!"),tr("illegal amounts!"),QMessageBox::Yes);
         return;
     }
@@ -132,11 +121,6 @@ void MyClient::on_addShoppingCart_clicked()
     }
     else//不在，insert
     {
-        //        if(count>maxcount)
-        //        {
-        //                QMessageBox::warning(this,tr("error!!!"),tr("your shopping chart is full"),QMessageBox::Yes);
-        //                return;
-        //    }
         query.prepare("select count(goods_id) from shopping_charts "
                       "where customer_id =:customer_id");
         query.bindValue(":customer_id",customerId);
@@ -214,22 +198,6 @@ void MyClient::on_Btn_buy_clicked()
 
             float sumMoney=shoppingWidget->findChild<QLabel*>("sumMoney"+QString::number(goodsId))->text().toFloat();
             sum+=sumMoney;
-            //            cout<<goodsId;
-            //已完成：根据购物车勾选状态获取要购买的商品的goods_id
-            //处理数据库？？
-            //判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
-            //该商品仓库库存
-            //            int goodsAmount = showGoodsAmount(goodsId);
-
-            //            if (amount > goodsAmount )
-            //            {
-            //                //库存不够 弹窗报错
-            //                QMessageBox::warning(this,tr("error!!!"),tr("lack of stock!"),QMessageBox::Yes);
-            //                return;
-            //            }
-            //            //else 库存足够 则库存减少
-            //            goodsAmount -= amount;
-
 
             //处理ui
 
@@ -312,7 +280,6 @@ void MyClient::updateShoppingCharts()
 
     //warning:it would find all widgets includes checkboxes and labels
     QList<QWidget*> widgetList=shoppingWidget->findChildren<QWidget*>();
-    //    QList<QWidget*> widgetList=ui->scrollArea->findChildren<QWidget*>();
 
     //delete all
     for(int i=0;i<widgetList.length();i++)
@@ -326,7 +293,6 @@ void MyClient::updateShoppingCharts()
     query.prepare("select * from shopping_charts where customer_id=:customer_id");
     query.bindValue(":customer_id",customerId);
     query.exec();
-    //    cout<<query.lastError();
 
     while(query.next())
     {
@@ -358,12 +324,13 @@ void MyClient::updateShoppingCharts()
         QHBoxLayout *hLayout=new QHBoxLayout;
         QCheckBox *buy=new QCheckBox("");
         QLabel *goodsName=new QLabel(tempGoodsName);
-        //        QLabel *amount= new QLabel(query.value("amount").toString());
         QSpinBox *amount=new QSpinBox();
         amount->setValue(query.value("amount").toInt());
         amount->setMinimum(1);
         amount->setMaximum(tempGoodsAmount);
         QLabel *sumMoney=new QLabel(sum);
+
+
         buy->setMinimumWidth(40);
         buy->setMaximumWidth(40);
         goodsName->setMinimumWidth(120);
@@ -373,6 +340,7 @@ void MyClient::updateShoppingCharts()
         sumMoney->setMinimumWidth(100);
         sumMoney->setMaximumWidth(100);
         record->setMinimumHeight(30);
+
         //判断可不可打钩
         //这是商品的库存
         int goodsAmount = showGoodsAmount(tempGoodsId);
@@ -422,7 +390,8 @@ void MyClient::on_pushButton_2_clicked()
     //地址是否为空
     QString input = ui->address->text();
     if ( input.isEmpty() )
-    {        //输入为空，警告处理
+    {
+        //输入为空，警告处理
         QMessageBox::warning(this,tr("error!!!"),tr("please input address"),QMessageBox::Yes);
         return;
     }
@@ -453,8 +422,6 @@ void MyClient::on_pushButton_2_clicked()
     }
     else
     {
-        //bug: 如果未曾充值，money是不是初始化为0？
-        //一般情况下不会出现
         cout<<"error";
         return;
     }
@@ -463,7 +430,6 @@ void MyClient::on_pushButton_2_clicked()
     cout<<"begin to check every stock";
     //直接扣库存，订单中只要有一个商品的库存不够，那么整个订单都失败 rollback
     bool pay = true;//判断订单是否能成功
-    //TODO:后期把10改成一笔订单中的最大商品数
     int * lackGoodsId = new int [10];//存这笔订单中库存不够的商品id
     int cur = 0;//用来记录数组的当前下标
 
@@ -482,12 +448,6 @@ void MyClient::on_pushButton_2_clicked()
             amt=QString::number(amount);
             //订单中所有商品id对应的数量
             goodsAmounts=goodsAmounts+" "+amt;
-
-            //float sumMoney=shoppingWidget->findChild<QLabel*>("sumMoney"+QString::number(goodsId))->text().toFloat();
-            //sum+=sumMoney;
-            //cout<<sumMoney;
-            //已完成：根据购物车勾选状态获取要购买的商品的goods_id
-            //todo：判断库存。库存足够，删购物车记录，插入订单记录，修改顾客钱钱，修改商品库存；
 
             //判断库存
             query.prepare("select amount from GOODS where goods_id=:goods_id for update nowait");
@@ -535,7 +495,7 @@ void MyClient::on_pushButton_2_clicked()
                 else //not enough to sell
                 {
                     //todo: alert that not enough to sell
-                    // QMessageBox::warning(this,tr("error!!!"),tr("lack of stock!"),QMessageBox::Yes);
+                    QMessageBox::warning(this,tr("error!!!"),tr("lack of stock!"),QMessageBox::Yes);
                     pay = false;
                     lackGoodsId[cur] = goodsId;
                     cur++;
@@ -584,14 +544,15 @@ void MyClient::on_pushButton_2_clicked()
     cout<<goodsIds<<" "<<customerId<<" "<<sum<<" "<<ui->address->text()<<" "<<goodsAmounts;
     query.bindValue(":goods_id_list",goodsIds);
     query.bindValue(":customer_id",customerId);
-
     query.bindValue(":timing",curDate);
     query.bindValue(":address",ui->address->text());
     query.bindValue(":goods_amount_list",goodsAmounts);
     query.bindValue(":total",ui->discounted_cost->text());
     query.bindValue(":activity_id",discountId);
     query.exec();
+
     cout<<query.lastError();
+    cout<<query.lastQuery();
     ui->address->clear();
     ui->original_cost->clear();
     ui->discount_kind->clear();
@@ -603,7 +564,6 @@ void MyClient::on_pushButton_2_clicked()
     query.addBindValue(customerId);
     query.exec();
     query.next();
-    //float remaining = query.value(0).toFloat();
     QString remaining = QString("%1").arg(query.value(0).toFloat());
     ui->remaining->setText(remaining);
 
@@ -629,43 +589,12 @@ void MyClient::on_charge_clicked()
         cout<<query.lastQuery();
     }
     else{
-        //todo
         QMessageBox::warning(this,tr("error"),tr("无充值金额！"),QMessageBox::Yes);
     }
-
 
     //修改ui
     ui->ChargeMoney->clear();
     ui->remaining->setText(QString::number(rechargeMoney+remainingMoney));
-
-    //    QSqlQuery query;
-    //    query.prepare("select * from CUSTOMERS where customer_id = ?");
-    //    query.addBindValue(customerId);
-    //    query.exec();
-
-    //    if (query.next())
-    //    {
-    //        float currentMoney = query.value(3).toFloat();
-    //        query.prepare("update CUSTOMERS set money = ? where customer_id = ?");
-    //        query.addBindValue(rechargeMoney+currentMoney);
-    //        query.addBindValue(customerId);
-    //        query.exec();
-    //        //TODO:弹窗显示充值成功？
-    //        cout<<"充值成功!";
-
-    //        //充值完 更新当前余额
-    //        query.prepare("select money from CUSTOMERS where customer_id = ?");
-    //        query.addBindValue(customerId);
-    //        query.exec();
-    //        query.next();
-    //        //float remaining = query.value(0).toFloat();
-    //        QString remaining = QString("%1").arg(query.value(0).toFloat());
-    //        ui->remaining->setText(remaining);
-
-    //        //TODO:把刚刚输入框内的数字删掉
-    //    }
-    //    else//一般不会出现的情况
-    //        cout<<"出错";
 }
 
 
@@ -685,64 +614,6 @@ void MyClient::on_tableView_clicked(const QModelIndex &index)
 
     cout<<"in on_tableView_clicked()";
     onTableSelectChange(1);
-    //    onTableSelectChange(1);
-    //    goods_model->setTable("GOODS");
-    //    goods_model->select();
-    //    QSqlRecord record=goods_model->record(index.row());
-    //    ui->name->setText(record.value("goods_name").toString());
-    //    ui->price->setText(record.value("price").toString());
-    //    ui->spinBox->setValue(1);
-    //    ui->comboBox->setCurrentText(record.value("kind").toString());
-    //    ui->stock->setText(record.value("amount").toString());
-    //    ui->sum->setText("0");
-    //    ui->id->setText(record.value("goods_id").toString());
-    //
-
-    //    int r;
-    //    r=ui->tableView->currentIndex().row();
-    //    //QModelIndex index;
-
-    //    QModelIndex currentIndex;
-    //    goods_model->setTable("GOODS");
-    //    if(ui->comboBox->currentText()=="全部")
-    //    {
-
-    //    }
-    //    else
-    //    {
-    //        goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-    //    }
-    //    goods_model->select();//获取表
-    //    currentIndex=goods_model->index(r,0);//id
-    //    ui->id->setText(goods_model->data(currentIndex).toString());
-
-    //    currentIndex=goods_model->index(r,1);//名称
-    //    ui->name->setText(goods_model->data(currentIndex).toString());
-
-    //    currentIndex=goods_model->index(r,2);//库存
-    //    ui->stock->setText(goods_model->data(currentIndex).toString());
-
-    //    currentIndex=goods_model->index(r,4);//单价
-    //    ui->price->setText(goods_model->data(currentIndex).toString());
-
-    //    QSqlQuery query; //类别
-    //    query.exec(QString("select kind from GOODS where goods_id='%1'").arg(ui->id->text()));
-    //    query.next();
-    //    ui->comboBox->setCurrentText(query.value(0).toString());
-    //    //    QSqlQuery query; //类别
-    //    //    query.exec(QString("select kind from discounts where discount_id='%1'").arg(ui->id->text()));
-    //    //    query.next();
-    //    //ui->kind->setCurrentText(query.value(0).toString());
-
-    //    goods_model->setTable("GOODS");
-    //    goods_model->setFilter(QObject::tr("kind= '%1'").arg(ui->comboBox->currentText()));
-    //    goods_model->select();
-    //    ui->tableView->setModel(goods_model);
-
-    //    ui->spinBox->setValue(1);
-    //    on_spinBox_valueChanged(1);
-
-
 }
 
 void MyClient::onTableSelectChange(int row)
@@ -775,19 +646,6 @@ void MyClient::onTableSelectChange(int row)
 //根据左边种类筛选右侧商品
 void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
 {
-    //    cout<<"in on_comboBox_currentTextChanged()";
-    //    goods_model->setTable("GOODS");
-    //    if (ui->comboBox->currentText()=="全部")
-    //    {
-    //        on_pushButton_clicked();
-    //        return;
-    //    }
-
-    //    goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
-    //    goods_model->select();
-    //    ui->tableView->setModel(goods_model);
-
-
     if(ui->comboBox->currentText()=="全部")
     {
         goods_model->setTable("GOODS");
@@ -795,13 +653,11 @@ void MyClient::on_comboBox_currentTextChanged(const QString &arg1)
         ui->tableView->setModel(goods_model);
         return;
     }
-    //    k=1;
     cout<<"in on_kind_currentTextChanged()";
     goods_model->setTable("goods");
     goods_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
     goods_model->select();
     ui->tableView->setModel(goods_model);
-
 }
 
 void MyClient::on_Btn_delete_clicked()
@@ -822,7 +678,6 @@ void MyClient::on_Btn_delete_clicked()
             query.bindValue(":goods_id",goodsId);
             query.bindValue(":customer_id",customerId);
             query.exec();
-            //            cout<<"in delete from shopping_charts: "<<query.lastError();
         }
     }
 

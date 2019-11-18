@@ -36,23 +36,17 @@ void MyRegister::on_register_2_clicked()
         query.exec();
         QMessageBox::warning(this,tr("success"),tr("welcome!"),QMessageBox::Yes);
         this->close();
-
     }
     else//检查发现该账号已经被注册
     {
         QMessageBox::warning(this,tr("fail"),tr("account is already existed"),QMessageBox::Yes);
-        //        cout << "注册失败，账号已注册";
     }
-
 }
-
-//fixme: after registing,login fail
 
 
 //检查用户输入的手机号是否已经被注册过
 bool MyRegister::registerCheck(QString customerId)
 {
-
     QSqlQuery query;
     query.prepare("select * from CUSTOMERS where customer_id=:customer_id");
     query.bindValue(":customer_id",customerId);
@@ -63,5 +57,4 @@ bool MyRegister::registerCheck(QString customerId)
         return false;//该手机号已被注册
 
     return true;//该手机号未被注册
-
 }

@@ -33,8 +33,6 @@ private slots:
 
     void on_tableView_clicked(const QModelIndex &index);
 
-//    void on_pushButton_clicked();
-
     void on_spinBox_valueChanged(int arg1);
 
     void on_Btn_buy_clicked();
