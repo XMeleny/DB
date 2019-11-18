@@ -12,6 +12,11 @@ LogIn::LogIn(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LogIn)
 {
+    if(createConnection==false)
+    {
+        QMessageBox::warning(this,tr("error!!!"),tr("连接数据库失败！"),QMessageBox::Yes);
+        this->close();
+    }
     this->setWindowTitle(tr("login"));
     ui->setupUi(this);
     ui->passward->setEchoMode(QLineEdit::Password);//当输入密码时，显示为*******

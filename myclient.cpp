@@ -102,7 +102,7 @@ void MyClient::on_addShoppingCart_clicked()
     //判断主键是否存在（即该用户是否曾经将该物品加购）
 
     QSqlQuery query;
-    query.prepare("select * from shopping_charts where goods_id=:goods_id and customer_id=:customer_id");
+    query.prepare("select * from SHOPPING_CHARTS where goods_id=:goods_id and customer_id=:customer_id");
     query.bindValue(":goods_id",tempGoodsId);
     query.bindValue(":customer_id",customerId);
     query.exec();
@@ -112,7 +112,7 @@ void MyClient::on_addShoppingCart_clicked()
     if (query.next())//存在，update
     {
         //更新数据库
-        query.prepare("update shopping_charts set amount=amount+:amount "
+        query.prepare("update SHOPPING_CHARTS set amount=amount+:amount "
                       "where goods_id=:goods_id and customer_id=:customer_id");
         query.bindValue(":amount",tempAmount);
         query.bindValue(":goods_id",tempGoodsId);
@@ -121,7 +121,7 @@ void MyClient::on_addShoppingCart_clicked()
     }
     else//不在，insert
     {
-        query.prepare("select count(goods_id) from shopping_charts "
+        query.prepare("select count(goods_id) from SHOPPING_CHARTS "
                       "where customer_id =:customer_id");
         query.bindValue(":customer_id",customerId);
         query.exec();
@@ -138,7 +138,7 @@ void MyClient::on_addShoppingCart_clicked()
 
 
         //更新数据库
-        query.prepare("insert into shopping_charts (goods_id,customer_id,amount) "
+        query.prepare("insert into SHOPPING_CHARTS (goods_id,customer_id,amount) "
                       "values (?,?,?)");
         query.addBindValue(tempGoodsId);
         query.addBindValue(customerId);
@@ -290,9 +290,10 @@ void MyClient::updateShoppingCharts()
     }
     //add all
     QSqlQuery query;
-    query.prepare("select * from shopping_charts where customer_id=:customer_id");
+    query.prepare("select * from SHOPPING_CHARTS where customer_id=:customer_id");
     query.bindValue(":customer_id",customerId);
     query.exec();
+    cout<<"in select * from shopping_charts:"<<query.lastError();
 
     while(query.next())
     {
@@ -300,7 +301,7 @@ void MyClient::updateShoppingCharts()
         int tempGoodsId=query.value("goods_id").toInt();
 
         QSqlQuery temp;
-        temp.prepare("select * from goods where goods_id=:goods_id");
+        temp.prepare("select * from GOODS where goods_id=:goods_id");
         temp.bindValue(":goods_id",tempGoodsId);
         temp.exec();
         //get goods_name ,price

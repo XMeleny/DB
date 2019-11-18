@@ -5,11 +5,11 @@ static bool createConnection()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
 
-//    db.setHostName("116.56.158.101");
-//    db.setPort(3306);
+    db.setHostName("118.89.44.161");
+    db.setPort(3306);
     db.setDatabaseName("test");
-    db.setUserName("root");
-    db.setPassword("123456");
+    db.setUserName("xm");
+    db.setPassword("xm123456");
     //打开数据库
     if(!db.open())
     {
