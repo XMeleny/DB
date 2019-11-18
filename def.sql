@@ -33,7 +33,7 @@ primary key (order_id,goods_id)
 
 create table ORDERS
 (
-order_id smallint unsigned,
+order_id smallint unsigned auto_increment,
 goods_id_list varchar(100),
 customer_id char(11),
 goods_amount_list varchar(100),
