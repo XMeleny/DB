@@ -9,12 +9,13 @@ MyBoss::MyBoss(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MyBoss)
 {
+
     ui->setupUi(this);
     discount_model=new QSqlTableModel;
     k=0;
-    connect(ui->comboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
-    connect(ui->comboBox_2,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
-    connect(ui->comboBox_3,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
+//    connect(ui->comboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
+//    connect(ui->comboBox_2,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
+//    connect(ui->comboBox_3,SIGNAL(currentIndexChanged(QString)),this,SLOT(print_s()));
     initMyStaff();
 }
 
@@ -34,7 +35,6 @@ void MyBoss::on_loginAgain_clicked()
 //周结账单
 void MyBoss::on_weeklyBill_clicked()
 {
-    //from xm
     QSqlQuery query;
     float sum=0;
 
@@ -52,19 +52,19 @@ void MyBoss::on_weeklyBill_clicked()
     query.exec();
     if(query.next())
     {
-        sum=query.value(0).toFloat();
+        sum+=query.value(0).toFloat();
     }
     cout<<"sum is: "<<sum;
 
     //handle the tableView
+    //set the table
     orders_model=new QSqlTableModel;
     orders_model->setTable("ORDERS");
     orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<='%2'").arg(strStartDay).arg(strEndDay));
     orders_model->select();
     ui->tableView_2->setModel(orders_model);
-
+    //set the sum
     ui->lineEdit->setText("sum: "+QString::number(sum));
-
 
     //left total and timing
     ui->tableView_2->setColumnHidden(0,true);
@@ -73,196 +73,83 @@ void MyBoss::on_weeklyBill_clicked()
     ui->tableView_2->setColumnHidden(3,true);
     ui->tableView_2->setColumnHidden(6,true);
     ui->tableView_2->setColumnHidden(7,true);
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //from jt
-//    orders_model=new QSqlTableModel;
-//    QString strings;
-//    QSqlQuery query;
-//    float sum=0;
-//    ui->toolBox->setCurrentIndex(0);
-//    QDate date(QDate::currentDate());
-//    QDate target = date.addDays(-6);
-//    int day1 =date.day();
-//    int day2 = target.day();
-//    QString buffer1,buffer2;
-//    if(day1<10)
-//    {
-//        buffer1 = QString("%1-%2-0%3").arg(date.year()).arg(date.month()).arg(date.day());
-//    }
-//    else{
-
-//        buffer1 = QString("%1-%2-%3").arg(date.year()).arg(date.month()).arg(date.day());
-//    }
-//    if(day2<10)
-//    {
-//        buffer2 = QString("%1-%2-0%3").arg(target.year()).arg(target.month()).arg(target.day());
-//    }
-//    else{
-//        buffer2 = QString("%1-%2-%3").arg(target.year()).arg(target.month()).arg(target.day());
-//    }
-//    cout<<buffer1<<buffer2;
-//    orders_model->setTable("ORDERS");
-//    orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<='%2'").arg(buffer2).arg(buffer1));
-//    orders_model->select();
-//    ui->tableView_2->setModel(orders_model);
-//    int month = date.month();
-//    int day = date.day();
-//    query.prepare("select * from ORDERS where MONTH(timing)=:month and DAY(timing)=:day");
-//    query.bindValue(":month",month);
-//    query.bindValue(":day",day);
-
-
-
-//    //bug here ,if there's not record , can't get value
-//    sum=sum+query.value("total").toFloat();
-//    cout<<sum;
-//    query.exec();
-//    query.next();
-//    while (query.next())
-//    {
-//        sum=sum+query.value("total").toFloat();
-//        cout<<query.value(4);
-//    }
-
-
-
-//    for(int i=1;i<=6;i++)
-//    {
-
-//        target = date.addDays(-i);
-
-//        cout<<target;
-//        month = target.month();
-//        day   = target.day();
-//        query.prepare("select * from ORDERS where MONTH(timing)=:month and DAY(timing)=:day");
-//        query.bindValue(":month",month);
-//        query.bindValue(":day",day);
-//        query.exec();
-//        while (query.next())
-//        {
-
-//            sum=sum+query.value("total").toFloat();
-//        }
-
-//    }
-//    QString extra = QString("%1").arg(sum);
-//    QString str = "sum"+extra ;
-//    strings = strings.sprintf("%.2f",sum);
-//    ui->lineEdit->setText("sum: "+strings);
-//    cout<<"sum: "<<sum;
-
-
-    //    ui->tableView_2->setColumnHidden(0,true);
-    //    ui->tableView_2->setColumnHidden(1,true);
-    //    ui->tableView_2->setColumnHidden(2,true);
-    //    ui->tableView_2->setColumnHidden(3,true);
-    //    ui->tableView_2->setColumnHidden(6,true);
-    //    ui->tableView_2->setColumnHidden(7,true);
 }
+
+
 //月结账单
 void MyBoss::on_monthlyBill_clicked()
 {
-    orders_model=new QSqlTableModel;
-    QComboBox *comboBox = ui->comboBox;
-    QComboBox *comboBox_2 = ui->comboBox_2;
-    QString year = comboBox->currentText();
-    QString month = comboBox_2->currentText();
-    cout<<year<<month;
-    QString begin = year +"-"+ month+"-" +"01";
-    int m = month.toInt();
-    int y = year.toInt();
-    int y_next=y+1;
-    QString year2=QString::number(y_next,10);
-    QString end;
-    int next;
-    if(m!=12)
-        next = m+1;
-    if(m==12)
-        next=1;
-    QString month2 = QString::number(next,10);
-    if(m!=12)
-        end = year +"-"+ month2 +"-"+"01";
-    else
-        end = year2 +"-"+ month2 +"-"+"01";
-    cout<<begin<<end;
-    orders_model->setTable("ORDERS");
-    orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<'%2'").arg(begin).arg(end));
-    orders_model->select();
+    int year=ui->spinBox->value();
+    int month=ui->spinBox_2->value();
 
-
-    ui->tableView_2->setModel(orders_model);
     QSqlQuery query;
-    query.prepare("select * from orders where YEAR(timing)=:year and MONTH(timing)=:month");
-    query.bindValue(":month",month);
-    query.bindValue(":year",year);
-    query.exec();
     float sum=0;
-    while(query.next())
-    {
 
-        sum=sum+query.value("total").toFloat();
+    query.prepare("select sum(total) from ORDERS where YEAR(timing)=:year and MONTH(timing)=:month");
+    query.bindValue(":year",year);
+    query.bindValue(":month",month);
+    query.exec();
+    if(query.next())
+    {
+        sum=query.value(0).toFloat();
     }
     cout<<sum;
-    QString strings;
-    strings = strings.sprintf("%.2f",sum);
-    ui->lineEdit->setText("sum:"+strings);
-    cout<<"sum: "<<sum;
+
+    orders_model=new QSqlTableModel;
+    orders_model->setTable("ORDERS");
+    orders_model->setFilter(QObject::tr("%1=YEAR(timing) and MONTH(timing)=%2").arg(year).arg(month));
+    orders_model->select();
+    ui->tableView_2->setModel(orders_model);
+
     ui->tableView_2->setColumnHidden(0,true);
     ui->tableView_2->setColumnHidden(1,true);
     ui->tableView_2->setColumnHidden(2,true);
     ui->tableView_2->setColumnHidden(3,true);
     ui->tableView_2->setColumnHidden(6,true);
     ui->tableView_2->setColumnHidden(7,true);
+
+    ui->lineEdit->setText("sum: "+QString::number(sum));
+
 }
+
+
 //年结账单
 void MyBoss::on_yearBill_clicked()
 {
-    orders_model=new QSqlTableModel;
-    QComboBox *comboBox_3 = ui->comboBox_3;
-    QString year = comboBox_3->currentText();
-    QString begin = year +"-"+"1"+"-"+"01";
-    QString end =year +"-"+"12"+"-"+"31";
-    orders_model->setTable("ORDERS");
-    orders_model->setFilter(QObject::tr("'%1'<=date_format(timing,'%Y-%m-%d') and date_format(timing,'%Y-%m-%d')<'%2'").arg(begin).arg(end));
-    orders_model->select();
-    ui->tableView_2->setModel(orders_model);
+    //from xm
     QSqlQuery query;
-    query.prepare("select * from orders where YEAR(timing)=:year");
+    float sum=0;
+
+    int year=ui->spinBox_3->value();
+    query.prepare("select sum(total) from ORDERS where YEAR(timing)=:year");
     query.bindValue(":year",year);
     query.exec();
-    float sum=0;
-    while(query.next())
+    if(query.next())
     {
-
-        sum=sum+query.value("total").toFloat();
+        sum=query.value(0).toFloat();
     }
-    cout<<sum;
-    QString strings;
-    strings = strings.sprintf("%.2f",sum);
-    ui->lineEdit->setText("sum: "+strings);
+    cout<<"in year sum:"<<sum;
+
+    orders_model=new QSqlTableModel;
+    orders_model->setTable("ORDERS");
+    orders_model->setFilter(QObject::tr("%1=YEAR(timing)").arg(year));
+    orders_model->select();
+    ui->tableView_2->setModel(orders_model);
+
     ui->tableView_2->setColumnHidden(0,true);
     ui->tableView_2->setColumnHidden(1,true);
     ui->tableView_2->setColumnHidden(2,true);
     ui->tableView_2->setColumnHidden(3,true);
     ui->tableView_2->setColumnHidden(6,true);
-    ui->tableView_2->setColumnHidden(7,true);//bug
+    ui->tableView_2->setColumnHidden(7,true);
+
+    ui->lineEdit->setText("sum: "+QString::number(sum));
+
 }
+
 
 void MyBoss::on_addDiscount_clicked()
 {
-//    cout<<ui->dateEdit->date();
     if(ui->name->text()=="")
     {
         QMessageBox::warning(this,tr("error!!!"),tr("no discount name!"),QMessageBox::Yes);
@@ -291,12 +178,15 @@ void MyBoss::on_addDiscount_clicked()
     query.addBindValue(ui->start->date());
     query.addBindValue(ui->end->date());
     query.exec();
+
     //刷新tableview信息
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);
     QMessageBox::warning(this,tr("success"),tr("successfully add discount!"),QMessageBox::Yes);
 }
+
+
 
 //删除优惠
 void MyBoss::on_deleteDiscount_clicked()
@@ -314,7 +204,6 @@ void MyBoss::on_deleteDiscount_clicked()
         ui->start->clear();
         ui->end->clear();
 
-        //        QSqlTableModel *discount_model=new QSqlTableModel;
         discount_model=new QSqlTableModel(this);
         discount_model->setTable("discounts");
         discount_model->select();
@@ -325,38 +214,36 @@ void MyBoss::on_deleteDiscount_clicked()
 
 }
 
+
+
 void MyBoss::initMyStaff()
 {
     QStringList years;
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
-    QSqlQuery query;
+
     discount_model->setTable("discounts");
     discount_model->select();
     ui->tableView->setModel(discount_model);
-    query.exec("select distinct YEAR(timing) from orders;");
-    while(query.next())
-    {
-        years.append(query.value(0).toString());
-    }
-    QCompleter* com=new QCompleter(years,this);
-    ui->comboBox_3->clear();
-    ui->comboBox_3->addItems(years);
-    ui->comboBox_3->setCompleter(com);
 
-    ui->comboBox->clear();
-    ui->comboBox->addItems(years);
-    ui->comboBox->setCompleter(com);
+    QDate date=QDate::currentDate();
+    int year=date.year();
+    int month=date.month();
+    cout<<year<<month;
 
-    QStringList months;
-    query.exec("select distinct MONTH(timing) from orders;");//todo: follow the year
-    while(query.next())
-    {
-        months.append(query.value(0).toString());
-    }
-    ui->comboBox_2->clear();
-    ui->comboBox_2->addItems(months);
-    ui->comboBox_2->setCompleter(com);
+    ui->spinBox->setMinimum(2000);
+    ui->spinBox->setMaximum(year);
+
+    ui->spinBox_2->setMinimum(1);
+    ui->spinBox_2->setMaximum(12);
+
+    ui->spinBox_3->setMinimum(2000);
+    ui->spinBox_3->setMaximum(year);
+
+    ui->spinBox->setValue(year);
+    ui->spinBox_2->setValue(month);
+    ui->spinBox_3->setValue(year);
+
 }
 
 

@@ -112,20 +112,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QComboBox" name="comboBox">
-            <property name="minimumSize">
-             <size>
-              <width>70</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>70</width>
-              <height>30</height>
-             </size>
-            </property>
-           </widget>
+           <widget class="QSpinBox" name="spinBox"/>
           </item>
           <item>
            <widget class="QLabel" name="label_7">
@@ -139,20 +126,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QComboBox" name="comboBox_2">
-            <property name="minimumSize">
-             <size>
-              <width>70</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>70</width>
-              <height>30</height>
-             </size>
-            </property>
-           </widget>
+           <widget class="QSpinBox" name="spinBox_2"/>
           </item>
           <item>
            <widget class="QLabel" name="label_8">
@@ -185,20 +159,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
-           <widget class="QComboBox" name="comboBox_3">
-            <property name="minimumSize">
-             <size>
-              <width>70</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>70</width>
-              <height>30</height>
-             </size>
-            </property>
-           </widget>
+           <widget class="QSpinBox" name="spinBox_3"/>
           </item>
           <item>
            <widget class="QLabel" name="label_9">
