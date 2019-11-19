@@ -138,7 +138,7 @@ void MyStaff::on_putIn_clicked()
     //插入不成功
     QSqlQueryModel model;
 
-    query.prepare("insert into goods(goods_name,amount,cost,price,kind) "
+    query.prepare("insert into GOODS(goods_name,amount,cost,price,kind) "
                   "values(:name,:amount,:cost,:price,:kind)");
     query.bindValue(":name",name1);
     query.bindValue(":amount",amount1);

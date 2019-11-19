@@ -541,7 +541,7 @@ void MyClient::on_pushButton_2_clicked()
     updateShoppingCharts();
 
     //insert into orders 生成订单
-    query.prepare("insert into orders(goods_id_list,customer_id,total,timing,address,goods_amount_list,activity_id) values(:goods_id_list,:customer_id,:total,:timing,:address,:goods_amount_list,:activity_id)");
+    query.prepare("insert into ORDERS(goods_id_list,customer_id,total,timing,address,goods_amount_list,activity_id) values(:goods_id_list,:customer_id,:total,:timing,:address,:goods_amount_list,:activity_id)");
     cout<<goodsIds<<" "<<customerId<<" "<<sum<<" "<<ui->address->text()<<" "<<goodsAmounts;
     query.bindValue(":goods_id_list",goodsIds);
     query.bindValue(":customer_id",customerId);
