@@ -171,16 +171,17 @@ void MyBoss::on_addDiscount_clicked()
         return;
     }
     QSqlQuery query;
-    query.prepare("insert into discounts(discount_name,kind,start_time,end_time) "
+    query.prepare("insert into DISCOUNTS(discount_name,kind,start_time,end_time) "
                   "values(?,?,?,?)");
     query.addBindValue(ui->name->text());
     query.addBindValue(ui->comboBox_4->currentText());
     query.addBindValue(ui->start->date());
     query.addBindValue(ui->end->date());
     query.exec();
+    cout<<query.lastQuery()<<query.lastError();
 
     //刷新tableview信息
-    discount_model->setTable("discounts");
+    discount_model->setTable("DISCOUNTS");
     discount_model->select();
     ui->tableView->setModel(discount_model);
     QMessageBox::warning(this,tr("success"),tr("successfully add discount!"),QMessageBox::Yes);
@@ -196,7 +197,7 @@ void MyBoss::on_deleteDiscount_clicked()
     {
         //删除数据库记录
         QSqlQuery query;
-        query.exec(QString("delete from discounts where discount_id=%1").arg(ui->id->text()));
+        query.exec(QString("delete from DISCOUNTS where discount_id=%1").arg(ui->id->text()));
         cout<<query.lastError();
         //刷新tableview信息
         ui->name->setText("");
@@ -205,7 +206,7 @@ void MyBoss::on_deleteDiscount_clicked()
         ui->end->clear();
 
         discount_model=new QSqlTableModel(this);
-        discount_model->setTable("discounts");
+        discount_model->setTable("DISCOUNTS");
         discount_model->select();
         ui->tableView->setModel(discount_model);
 
@@ -222,7 +223,7 @@ void MyBoss::initMyStaff()
     //显示账单的界面
     ui->toolBox->setCurrentIndex(0);
 
-    discount_model->setTable("discounts");
+    discount_model->setTable("DISCOUNTS");
     discount_model->select();
     ui->tableView->setModel(discount_model);
 
@@ -292,14 +293,14 @@ void MyBoss::on_kind_currentTextChanged(const QString &arg1)
 
     if(ui->kind->currentText()=="全部")
     {
-        discount_model->setTable("discounts");
+        discount_model->setTable("DISCOUNTS");
         discount_model->select();
         ui->tableView->setModel(discount_model);
         return;
     }
 
     cout<<"in on_kind_currentTextChanged()";
-    discount_model->setTable("discounts");
+    discount_model->setTable("DISCOUNTS");
     discount_model->setFilter(QObject::tr("kind= '%1'").arg(arg1));
     discount_model->select();
     ui->tableView->setModel(discount_model);
